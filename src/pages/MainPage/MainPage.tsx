@@ -1,31 +1,14 @@
 import styled from 'styled-components';
 import Calendar from './Calendar';
 import { useNavigate } from 'react-router-dom';
+import Button from '@/components/Button';
 
-const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: -30px 0;
-  height: 100%;
-`;
-
-const StyledButton = styled.button`
+const StyledButton = styled(Button)`
   position: absolute;
   left: 440px;
   top: 50px;
 
   width: 200px;
-
-  border: 1px solid black;
-  box-shadow: 4px 4px rgb(0 0 0 / 20%);
-  background-color: var(--secondary);
-  padding: 10px 16px;
-  text-align: center;
-
-  &:hover {
-    cursor: pointer;
-  }
 `;
 
 function MainPage() {
@@ -37,15 +20,11 @@ function MainPage() {
   };
 
   return (
-    <>
-      <Container>
-        <Calendar>
-          <StyledButton onClick={handleWriteButtonClick}>
-            오늘 일기 쓰러가기↗↗
-          </StyledButton>
-        </Calendar>
-      </Container>
-    </>
+    <Calendar>
+      <StyledButton onClick={handleWriteButtonClick}>
+        오늘 일기 쓰러가기↗↗
+      </StyledButton>
+    </Calendar>
   );
 }
 

@@ -3,8 +3,6 @@ import styled from 'styled-components';
 interface Props {
   width: number;
   height: number;
-  positionX?: number;
-  positionY?: number;
 }
 
 const BoxContainer = styled.div<Props>`

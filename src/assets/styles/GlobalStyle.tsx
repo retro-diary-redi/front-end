@@ -32,7 +32,7 @@ const GlobalStyle = createGlobalStyle`
     height: 100%;
   }
 
-  h2, p {
+  h1, h2, p {
     margin: 0;
   }
 
@@ -43,6 +43,14 @@ const GlobalStyle = createGlobalStyle`
   a:visited {
     text-decoration: none;
     color: black;
+  }
+
+  input {
+    border: none;
+  }
+
+  input:focus {
+    outline: none;
   }
 `;
 
