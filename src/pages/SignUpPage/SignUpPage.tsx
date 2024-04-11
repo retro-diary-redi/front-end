@@ -1,5 +1,6 @@
 import BoxContainer from '@/components/BoxContainer';
 import Button from '@/components/Button';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 const Container = styled(BoxContainer)`
@@ -15,6 +16,10 @@ const Form = styled.form`
   flex-direction: column;
   align-items: center;
   gap: 10px;
+
+  button {
+    margin-top: 30px;
+  }
 `;
 
 const Input = styled.input`
@@ -26,19 +31,57 @@ const Input = styled.input`
 `;
 
 function SignUpPage() {
+  const [formData, setFormData] = useState({
+    email: '',
+    nickname: '',
+    password: '',
+    confirmPassword: '',
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    alert('button clicked');
+    console.log(formData);
   };
 
   return (
-    <Container width={400} height={500}>
+    <Container width={400} height={430}>
       <h1>Sign Up</h1>
       <Form onSubmit={handleSubmit}>
-        <Input type="email" placeholder="email" name="email" />
-        <Input type="text" placeholder="nickname" />
-        <Input type="password" placeholder="password" />
-        <Input type="password" placeholder="password check" />
+        <Input
+          type="email"
+          placeholder="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+        />
+        <Input
+          type="text"
+          placeholder="nickname"
+          name="nickname"
+          value={formData.nickname}
+          onChange={handleChange}
+        />
+        <Input
+          type="password"
+          placeholder="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+        />
+        <Input
+          type="password"
+          placeholder="password check"
+          name="confirmPassword"
+          value={formData.confirmPassword}
+          onChange={handleChange}
+        />
         <Button type="submit">Sign Up</Button>
       </Form>
     </Container>
