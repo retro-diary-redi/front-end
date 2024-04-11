@@ -1,9 +1,15 @@
 import { createGlobalStyle } from 'styled-components';
 import { normalize } from 'styled-normalize';
-import '../index.css';
 
 const GlobalStyle = createGlobalStyle`
   ${normalize}
+
+  :root {
+  --primary: #fbf2e8;
+  --secondary: #d6dddb;
+  --blue: #1246ff;
+  --red: #ff1d1d;
+}
 
   @font-face {
     font-family: "DungGeunMo";
@@ -11,10 +17,19 @@ const GlobalStyle = createGlobalStyle`
     src: url()("./../fonts/DungGeunMo2.ttf") format("truetype");
   }
 
+  html {
+    height: 100%;
+  }
+
   body {
+    height: 100%;
     font-family: "DungGeunMo";
     line-height: 1.5;
     background-color: var(--primary);
+  }
+
+  #root {
+    height: 100%;
   }
 
   h2, p {
