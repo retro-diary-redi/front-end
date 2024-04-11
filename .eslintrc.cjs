@@ -20,6 +20,10 @@ module.exports = {
     ],
     'react/react-in-jsx-scope': 'off',
     'prettier/prettier': 'error',
+    'react/function-component-definition': [
+      2,
+      { namedComponents: ['arrow-function', 'function-declaration'] },
+    ],
   },
   parserOptions: {
     ecmaVersion: 'latest',
