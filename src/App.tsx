@@ -6,6 +6,7 @@ import LoginPage from './pages/LoginPage/LoginPage';
 import DiaryWritePage from './pages/DiaryWritePage/DiaryWritePage';
 import DiaryViewPage from './pages/DiaryViewPage/DiaryViewPage';
 import NavBar from './components/NavBar';
+import LandingPage from './pages/LandingPage/LandingPage';
 
 const Container = styled.div`
   display: flex;
@@ -22,6 +23,7 @@ function App() {
       <Container>
         <Routes>
           <Route path="/" element={<MainPage />} />
+          <Route path="landing" element={<LandingPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/write" element={<DiaryWritePage />} />
