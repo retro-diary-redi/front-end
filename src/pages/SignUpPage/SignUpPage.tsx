@@ -48,6 +48,35 @@ function SignUpPage() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // 닉네임 유효성 검사
+    const nicknamePattern = /^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,16}$/;
+    if (!nicknamePattern.test(formData.nickname)) {
+      alert(
+        '닉네임은 2자 이상 16자 이하, 영어와 숫자 또는 한글로 구성되어야 합니다.'
+      );
+      setFormData({ ...formData, nickname: '' });
+      return;
+    }
+
+    // 비밀번호 입력이 다를 경우
+    if (formData.password !== formData.confirmPassword) {
+      alert('비밀번호가 일치하지 않습니다. 다시 입력해주세요.');
+      setFormData({ ...formData, password: '', confirmPassword: '' });
+      return;
+    }
+
+    // 비밀번호
+    const pwPattern =
+      /^(?=.*[0-9])(?=.*[a-zA-Z])[a-zA-Z0-9!@#$%^&*()._-]{6,16}$/;
+    if (!pwPattern.test(formData.nickname)) {
+      alert(
+        '비밀번호는 6자 이상 16자 이하, 영어와 숫자의 조합으로 구성되어야 합니다.'
+      );
+      setFormData({ ...formData, password: '', confirmPassword: '' });
+      return;
+    }
+
     console.log(formData);
   };
 
@@ -60,6 +89,7 @@ function SignUpPage() {
           placeholder="id"
           name="id"
           value={formData.id}
+          required
           onChange={handleChange}
         />
         <Input
@@ -67,6 +97,7 @@ function SignUpPage() {
           placeholder="email"
           name="email"
           value={formData.email}
+          required
           onChange={handleChange}
         />
         <Input
@@ -74,6 +105,7 @@ function SignUpPage() {
           placeholder="nickname"
           name="nickname"
           value={formData.nickname}
+          required
           onChange={handleChange}
         />
         <Input
@@ -81,6 +113,7 @@ function SignUpPage() {
           placeholder="password"
           name="password"
           value={formData.password}
+          required
           onChange={handleChange}
         />
         <Input
@@ -88,6 +121,7 @@ function SignUpPage() {
           placeholder="password check"
           name="confirmPassword"
           value={formData.confirmPassword}
+          required
           onChange={handleChange}
         />
         <Button type="submit" color={'var(--secondary)'}>

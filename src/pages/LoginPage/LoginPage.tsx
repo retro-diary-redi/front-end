@@ -65,6 +65,7 @@ function LoginPage() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     console.log(formData);
   };
 
@@ -92,6 +93,7 @@ function LoginPage() {
           placeholder="id"
           name="id"
           value={formData.id}
+          required
           onChange={handleChange}
         />
         <Input
@@ -99,6 +101,7 @@ function LoginPage() {
           placeholder="password"
           name="password"
           value={formData.password}
+          required
           onChange={handleChange}
         />
         <Button type="submit" color={'var(--secondary)'}>
