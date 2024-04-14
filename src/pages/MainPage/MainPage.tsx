@@ -21,7 +21,7 @@ function MainPage() {
 
   return (
     <Calendar>
-      <StyledButton onClick={handleWriteButtonClick}>
+      <StyledButton onClick={handleWriteButtonClick} color={'var(--secondary)'}>
         오늘 일기 쓰러가기↗↗
       </StyledButton>
     </Calendar>

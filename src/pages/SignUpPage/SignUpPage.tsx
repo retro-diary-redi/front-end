@@ -90,7 +90,9 @@ function SignUpPage() {
           value={formData.confirmPassword}
           onChange={handleChange}
         />
-        <Button type="submit">Sign Up</Button>
+        <Button type="submit" color={'var(--secondary)'}>
+          Sign Up
+        </Button>
       </Form>
     </Container>
   );

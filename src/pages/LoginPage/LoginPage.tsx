@@ -66,7 +66,9 @@ function LoginPage() {
           value={formData.password}
           onChange={handleChange}
         />
-        <Button type="submit">Enter</Button>
+        <Button type="submit" color={'var(--secondary)'}>
+          Enter
+        </Button>
       </Form>
     </Container>
   );

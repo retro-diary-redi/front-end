@@ -44,7 +44,6 @@ const MainContainer = styled(Container)`
     }
 
     > button:first-child {
-      background-color: var(--primary);
       cursor: default;
     }
 
@@ -77,8 +76,10 @@ function LandingPage() {
             로그인하시겠습니까?
           </h3>
           <div className="buttons">
-            <Button>아니요</Button>
-            <Button onClick={handleButtonClick}>예</Button>
+            <Button color={'var(--primary)'}>아니요</Button>
+            <Button color={'var(--secondary)'} onClick={handleButtonClick}>
+              예
+            </Button>
           </div>
         </MainContainer>
       </TitleContainer>
