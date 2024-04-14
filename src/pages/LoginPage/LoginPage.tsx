@@ -32,7 +32,7 @@ const Input = styled.input`
 
 function LoginPage() {
   const [formData, setFormData] = useState({
-    email: '',
+    id: '',
     password: '',
   });
 
@@ -53,10 +53,10 @@ function LoginPage() {
       <h1>Login</h1>
       <Form onSubmit={handleSubmit}>
         <Input
-          type="email"
-          placeholder="email"
-          name="email"
-          value={formData.email}
+          type="text"
+          placeholder="id"
+          name="id"
+          value={formData.id}
           onChange={handleChange}
         />
         <Input

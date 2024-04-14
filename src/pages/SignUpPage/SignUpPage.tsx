@@ -32,6 +32,7 @@ const Input = styled.input`
 
 function SignUpPage() {
   const [formData, setFormData] = useState({
+    id: '',
     email: '',
     nickname: '',
     password: '',
@@ -51,9 +52,16 @@ function SignUpPage() {
   };
 
   return (
-    <Container width={400} height={430}>
+    <Container width={400} height={480}>
       <h1>Sign Up</h1>
       <Form onSubmit={handleSubmit}>
+        <Input
+          type="text"
+          placeholder="id"
+          name="id"
+          value={formData.id}
+          onChange={handleChange}
+        />
         <Input
           type="email"
           placeholder="email"
