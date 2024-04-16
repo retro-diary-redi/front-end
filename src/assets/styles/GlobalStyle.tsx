@@ -17,9 +17,15 @@ const GlobalStyle = createGlobalStyle`
     src: url()("./../fonts/DungGeunMo2.ttf") format("truetype");
   }
 
+  * {
+    box-sizing: border-box;
+  }
+
   html {
     height: 100%;
   }
+
+  
 
   body {
     height: 100%;
