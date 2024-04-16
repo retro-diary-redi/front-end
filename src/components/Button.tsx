@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const Button = styled.button<{
-  color: string;
+  color?: string;
   width?: number;
   height?: number;
   fontSize?: number;
@@ -11,7 +11,7 @@ const Button = styled.button<{
   padding: 8px 14px;
   text-align: center;
 
-  background-color: ${({ color }) => color};
+  background-color: ${({ color }) => (color ? color : 'var(--primary)')};
   width: ${({ width }) => (width ? width + 'px' : 'auto')};
   height: ${({ height }) => (height ? height + 'px' : 'auto')};
   font-size: ${({ fontSize }) => fontSize}px;

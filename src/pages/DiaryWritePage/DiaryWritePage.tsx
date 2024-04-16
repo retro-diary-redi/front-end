@@ -3,6 +3,10 @@ import { getToday } from '@/utils/date';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import MoodSelectButton from './MoodSelectButton';
+import WeatherSelectButton from './WeatherSelectButton';
+import MoodSelectModal from './MoodSelectModal';
+import WeatherSelectModal from './WeatherSelectModal';
 
 const Container = styled.div`
   height: 100%;
@@ -41,6 +45,15 @@ const Container = styled.div`
     width: 100%;
     gap: 10px;
     height: 30px;
+    position: relative;
+
+    .mood-select-modal,
+    .weather-select-modal {
+      position: absolute;
+      right: 0;
+      top: 40px;
+      box-shadow: 4px 4px rgb(0 0 0 / 20%);
+    }
   }
 
   textarea {
@@ -69,6 +82,11 @@ const StyledInput = styled.input`
 
 function DiaryWritePage() {
   const today = getToday();
+
+  const [mood, setMood] = useState(0);
+  const [weather, setWeather] = useState(0);
+  const [showMoodSelectModal, setShowMoodSelectModal] = useState(false);
+  const [showWeatherSelectModal, setShowWeatherSelectModal] = useState(false);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -101,6 +119,14 @@ function DiaryWritePage() {
     alert('이미지 추가 버튼 클릭');
   };
 
+  const onClickMoodSelectButton = () => {
+    setShowMoodSelectModal(true);
+  };
+
+  const onClickWeatherSelectButton = () => {
+    setShowWeatherSelectModal(true);
+  };
+
   return (
     <Container>
       <Link to="/">
@@ -120,15 +146,29 @@ function DiaryWritePage() {
             onChange={handleChange}
             placeholder="Please enter a title"
           ></StyledInput>
-          <button type="button">Mood</button>
-          <button type="button">Weather</button>
+          <MoodSelectButton mood={mood} onClick={onClickMoodSelectButton} />
+          {showMoodSelectModal && (
+            <MoodSelectModal
+              setShowMoodSelectModal={setShowMoodSelectModal}
+              setMood={setMood}
+              formData={formData}
+              setFormData={setFormData}
+            />
+          )}
+          <WeatherSelectButton
+            weather={weather}
+            onClick={onClickWeatherSelectButton}
+          />
+          {showWeatherSelectModal && (
+            <WeatherSelectModal
+              setShowWeatherSelectModal={setShowWeatherSelectModal}
+              setWeather={setWeather}
+              formData={formData}
+              setFormData={setFormData}
+            />
+          )}
         </div>
-        <Button
-          color={`var(--secondary)`}
-          fontSize={12}
-          type="button"
-          onClick={handleAddImageButtonClick}
-        >
+        <Button fontSize={12} type="button" onClick={handleAddImageButtonClick}>
           오늘의 사진 추가하기
         </Button>
         <textarea
