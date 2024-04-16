@@ -1,6 +1,10 @@
 import BoxContainer from '@/components/BoxContainer';
 import Button from '@/components/Button';
+import { RegisterRequest } from '@/models/RegisterData';
+import Register from '@/services/register';
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Container = styled(BoxContainer)`
@@ -18,7 +22,11 @@ const Form = styled.form`
   gap: 10px;
 
   button {
-    margin-top: 30px;
+    margin-top: 15px;
+  }
+
+  p {
+    font-size: 13px;
   }
 `;
 
@@ -31,6 +39,8 @@ const Input = styled.input`
 `;
 
 function SignUpPage() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     id: '',
     email: '',
@@ -46,7 +56,7 @@ function SignUpPage() {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     // 닉네임 유효성 검사
@@ -69,7 +79,7 @@ function SignUpPage() {
     // 비밀번호
     const pwPattern =
       /^(?=.*[0-9])(?=.*[a-zA-Z])[a-zA-Z0-9!@#$%^&*()._-]{6,16}$/;
-    if (!pwPattern.test(formData.nickname)) {
+    if (!pwPattern.test(formData.password)) {
       alert(
         '비밀번호는 6자 이상 16자 이하, 영어와 숫자의 조합으로 구성되어야 합니다.'
       );
@@ -77,7 +87,22 @@ function SignUpPage() {
       return;
     }
 
-    console.log(formData);
+    const request: RegisterRequest = {
+      username: formData.id,
+      password: formData.password,
+      nickname: formData.nickname,
+      email: formData.email,
+    };
+
+    console.log('request:' + request);
+
+    const response = await Register(request);
+
+    if (response && response.status === 'success') {
+      console.log(response);
+      alert('회원가입이 완료되었습니다. 로그인해주세요.');
+      navigate('/login');
+    }
   };
 
   return (
@@ -124,6 +149,11 @@ function SignUpPage() {
           required
           onChange={handleChange}
         />
+        <Link to="/login">
+          <p>
+            {'>>'}구글, 네이버, 카카오로 로그인하기{'<<'}
+          </p>
+        </Link>
         <Button type="submit" color={'var(--secondary)'}>
           Sign Up
         </Button>

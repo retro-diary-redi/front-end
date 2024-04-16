@@ -1,6 +1,9 @@
 import BoxContainer from '@/components/BoxContainer';
 import Button from '@/components/Button';
+import { LoginRequest } from '@/models/LoginData';
+import Login, { GoogleLogin, KakaoLogin, NaverLogin } from '@/services/login';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Container = styled(BoxContainer)`
@@ -51,6 +54,8 @@ const Input = styled.input`
 `;
 
 function LoginPage() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     id: '',
     password: '',
@@ -63,25 +68,62 @@ function LoginPage() {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    console.log(formData);
+    const request: LoginRequest = {
+      username: formData.id,
+      password: formData.password,
+    };
+
+    console.log('request: ' + request);
+
+    const response = await Login(request);
+
+    if (response && response.status === 'success') {
+      console.log(response);
+      alert('로그인 되었습니다.');
+      navigate('/');
+    }
   };
 
-  const handleGoogleLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleGoogleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+
     // TODO: 구글 로그인 요청
+    const response = await GoogleLogin();
+
+    if (response && response.status === 'success') {
+      console.log(response);
+      alert('로그인 되었습니다.');
+      navigate('/');
+    }
   };
 
-  const handleNaverLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleNaverLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+
     // TODO: 네이버 로그인 요청
+    const response = await NaverLogin();
+
+    if (response && response.status === 'success') {
+      console.log(response);
+      alert('로그인 되었습니다.');
+      navigate('/');
+    }
   };
 
-  const handleKakaoLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleKakaoLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+
     // TODO: 카카오 로그인 요청
+    const response = await KakaoLogin();
+
+    if (response && response.status === 'success') {
+      console.log(response);
+      alert('로그인 되었습니다.');
+      navigate('/');
+    }
   };
 
   return (
