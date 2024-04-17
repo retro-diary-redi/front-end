@@ -25,10 +25,26 @@ function SelectButton({
 }) {
   return (
     <>
-      <StyledButton type="button" width={32} height={32} onClick={onClick}>
-        {type === 'mood' && <img src={moodSvgList[index]} alt="select mood" />}
+      <StyledButton
+        type="button"
+        className="select-button"
+        width={32}
+        height={32}
+        onClick={onClick}
+      >
+        {type === 'mood' && (
+          <img
+            src={moodSvgList[index]}
+            alt="select mood"
+            className="select-button"
+          />
+        )}
         {type === 'weather' && (
-          <img src={weatherSvgList[index]} alt="select weather" />
+          <img
+            src={weatherSvgList[index]}
+            alt="select weather"
+            className="select-button"
+          />
         )}
       </StyledButton>
     </>

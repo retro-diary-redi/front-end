@@ -124,8 +124,17 @@ function DiaryWritePage() {
     setShowWeatherSelectModal(true);
   };
 
+  const handleModalExternalClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLDivElement;
+
+    if (target.className !== 'select-button') {
+      setShowMoodSelectModal(false);
+      setShowWeatherSelectModal(false);
+    }
+  };
+
   return (
-    <Container>
+    <Container onClick={handleModalExternalClick}>
       <Link to="/">
         <button type="button">{'<'} back</button>
       </Link>
