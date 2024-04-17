@@ -1,6 +1,6 @@
 import Button from '@/components/Button';
 import { getToday } from '@/utils/date';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import SelectButton from './SelectButton';
@@ -36,6 +36,22 @@ const Container = styled.div`
       align-self: flex-end;
       margin-top: -45px;
     }
+
+    .write-form-section {
+      display: flex;
+      gap: 20px;
+      width: 100%;
+
+      textarea {
+        box-sizing: border-box;
+        resize: none;
+        min-height: 500px;
+        padding: 10px;
+        background-color: transparent;
+        border: 1px solid black;
+        flex-grow: 1;
+      }
+    }
   }
 
   .title-div {
@@ -53,16 +69,6 @@ const Container = styled.div`
     }
   }
 
-  textarea {
-    box-sizing: border-box;
-    resize: none;
-    min-width: 100%;
-    min-height: 500px;
-    padding: 10px;
-    background-color: transparent;
-    border: 1px solid black;
-  }
-
   textarea:focus {
     outline: none;
   }
@@ -77,13 +83,27 @@ const StyledInput = styled.input`
   background: none;
 `;
 
+const SelectedImage = styled.img`
+  min-width: 500px;
+  max-width: 500px;
+  min-height: 500px;
+  max-height: 500px;
+  padding: 10px;
+  object-fit: cover;
+  border: 1px solid black;
+`;
+
 function DiaryWritePage() {
   const today = getToday();
+  const fileInput = useRef(null);
 
   const [mood, setMood] = useState(0);
   const [weather, setWeather] = useState(0);
+
   const [showMoodSelectModal, setShowMoodSelectModal] = useState(false);
   const [showWeatherSelectModal, setShowWeatherSelectModal] = useState(false);
+
+  const [imageUrl, setImageUrl] = useState('');
 
   const [formData, setFormData] = useState({
     title: '',
@@ -113,7 +133,22 @@ function DiaryWritePage() {
   };
 
   const handleAddImageButtonClick = () => {
-    alert('이미지 추가 버튼 클릭');
+    if (fileInput.current !== null) {
+      (fileInput.current as HTMLInputElement).click();
+    }
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const image = e.target.files[0];
+      if (image) {
+        setImageUrl(URL.createObjectURL(image));
+        setFormData({
+          ...formData,
+          image_url: URL.createObjectURL(image),
+        });
+      }
+    }
   };
 
   const onClickMoodSelectButton = () => {
@@ -131,6 +166,14 @@ function DiaryWritePage() {
       setShowMoodSelectModal(false);
       setShowWeatherSelectModal(false);
     }
+  };
+
+  const handleRemoveImageButtonClick = () => {
+    setImageUrl('');
+    setFormData({
+      ...formData,
+      image_url: '',
+    });
   };
 
   return (
@@ -181,18 +224,45 @@ function DiaryWritePage() {
             />
           )}
         </div>
-        <Button fontSize={12} type="button" onClick={handleAddImageButtonClick}>
-          오늘의 사진 추가하기
-        </Button>
-        <textarea
-          name="content"
-          id="content"
-          autoFocus={false}
-          value={formData.content}
-          required
-          onChange={handleChange}
-          placeholder="Please enter a content..."
-        ></textarea>
+        {imageUrl && (
+          <Button
+            fontSize={12}
+            type="button"
+            onClick={handleRemoveImageButtonClick}
+          >
+            오늘의 사진 삭제하기
+          </Button>
+        )}
+        {imageUrl === '' && (
+          <Button
+            fontSize={12}
+            type="button"
+            onClick={handleAddImageButtonClick}
+          >
+            오늘의 사진 추가하기
+          </Button>
+        )}
+        <input
+          type="file"
+          accept="image/*"
+          ref={fileInput}
+          onChange={handleImageChange}
+          style={{ display: 'none' }}
+        />
+        <div className="write-form-section">
+          {imageUrl && (
+            <SelectedImage src={imageUrl} alt="preview"></SelectedImage>
+          )}
+          <textarea
+            name="content"
+            id="content"
+            autoFocus={false}
+            value={formData.content}
+            required
+            onChange={handleChange}
+            placeholder="Please enter a content..."
+          ></textarea>
+        </div>
       </form>
     </Container>
   );

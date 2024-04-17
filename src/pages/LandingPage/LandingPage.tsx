@@ -30,6 +30,7 @@ const MainContainer = styled(Container)`
   > h3 {
     font-weight: normal;
     margin: 0;
+    font-size: 18px;
   }
 
   .buttons {
