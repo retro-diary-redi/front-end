@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Route, Routes } from 'react-router-dom';
 import MainPage from './pages/MainPage/MainPage';
-import SignUpPage from './pages/\bSignUpPage/SignUpPage';
+import SignUpPage from './pages/SignUpPage/SignUpPage';
 import LoginPage from './pages/LoginPage/LoginPage';
 import DiaryWritePage from './pages/DiaryWritePage/DiaryWritePage';
 import DiaryViewPage from './pages/DiaryViewPage/DiaryViewPage';
