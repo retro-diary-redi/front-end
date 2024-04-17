@@ -1,10 +1,12 @@
 import Button from '@/components/Button';
 import { getToday } from '@/utils/date';
-import { useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import SelectButton from './SelectButton';
 import SelectModal from './SelectModal';
+import sampleData from '@/utils/sampleData.json';
+import { DiaryFormProps } from '@/models/DiaryData';
 
 const Container = styled.div`
   height: 100%;
@@ -52,6 +54,15 @@ const Container = styled.div`
         flex-grow: 1;
       }
     }
+
+    .view-buttons {
+      align-self: flex-end;
+      margin-top: -45px;
+
+      > button:first-child {
+        margin-right: 10px;
+      }
+    }
   }
 
   .title-div {
@@ -93,20 +104,20 @@ const SelectedImage = styled.img`
   border: 1px solid black;
 `;
 
-function DiaryWritePage() {
+const DiaryWritePage = ({ type }: { type: string }) => {
+  const navigate = useNavigate();
+  const params = useParams();
+
   const today = getToday();
   const fileInput = useRef(null);
-
-  const [mood, setMood] = useState(0);
-  const [weather, setWeather] = useState(0);
 
   const [showMoodSelectModal, setShowMoodSelectModal] = useState(false);
   const [showWeatherSelectModal, setShowWeatherSelectModal] = useState(false);
 
-  const [imageUrl, setImageUrl] = useState('');
+  // 혹시 나중에 이미지 상태를 따로 관리해야 할 경우를 대비해 살려둠
   const [imageFile, setImageFile] = useState<File>();
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<DiaryFormProps>({
     title: '',
     content: '',
     date: today,
@@ -114,6 +125,22 @@ function DiaryWritePage() {
     weather: 0,
     image_url: '',
   });
+
+  const allData = sampleData;
+
+  // 첫 렌더링 시 조회인지 확인하고 데이터 넣어서 보여주기
+  useEffect(() => {
+    if (type === 'view' || type === 'edit') {
+      const data = allData.find((data) => data.date === params.date);
+      if (data) {
+        setFormData(data);
+      } else {
+        // 보려는 날짜에 작성된 일기가 없으면 경고 창을 띄우고 되돌아간다.
+        alert('해당 날짜에 작성된 일기가 없습니다.');
+        navigate('/');
+      }
+    }
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -161,6 +188,9 @@ function DiaryWritePage() {
       },
     });
     */
+
+    // TODO: URL 라우팅 처리 필요
+    navigate(`/view/${params.date || today}`);
   };
 
   const handleAddImageButtonClick = () => {
@@ -173,7 +203,6 @@ function DiaryWritePage() {
     if (e.target.files) {
       const image = e.target.files[0];
       if (image) {
-        setImageUrl(URL.createObjectURL(image));
         setImageFile(image);
         setFormData({
           ...formData,
@@ -185,10 +214,12 @@ function DiaryWritePage() {
 
   const onClickMoodSelectButton = () => {
     setShowMoodSelectModal(true);
+    setShowWeatherSelectModal(false);
   };
 
   const onClickWeatherSelectButton = () => {
     setShowWeatherSelectModal(true);
+    setShowMoodSelectModal(false);
   };
 
   const handleModalExternalClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -201,11 +232,24 @@ function DiaryWritePage() {
   };
 
   const handleRemoveImageButtonClick = () => {
-    setImageUrl('');
     setFormData({
       ...formData,
       image_url: '',
     });
+  };
+
+  const handleDeleteButtonClick = () => {
+    alert('삭제 버튼 클릭');
+
+    // TODO: 일기 삭제 요청 로직 추가
+  };
+
+  const handleEditButtonClick = () => {
+    alert('수정 버튼 클릭');
+
+    // TODO: 일기 수정 요청 로직 추가
+
+    navigate(`/edit/${params.date}`);
   };
 
   return (
@@ -213,11 +257,35 @@ function DiaryWritePage() {
       <Link to="/">
         <button type="button">{'<'} back</button>
       </Link>
-      <p>{today}</p>
+      <p>{today}</p> {/* TODO: 날짜 올바르게 보이도록 수정 */}
       <form onSubmit={handleSubmit}>
-        <Button type="submit" color={`var(--secondary)`} fontSize={12}>
-          저장
-        </Button>
+        {(type === 'write' || type === 'edit') && (
+          <Button type="submit" color={`var(--secondary)`} fontSize={12}>
+            저장
+          </Button>
+        )}
+        {type === 'view' && (
+          <div className="view-buttons">
+            <Button
+              type="button"
+              className="view-edit-button"
+              fontSize={12}
+              onClick={handleEditButtonClick}
+            >
+              수정
+            </Button>
+            <Button
+              type="button"
+              className="view-delete-button"
+              color={`var(--secondary)`}
+              fontSize={12}
+              onClick={handleDeleteButtonClick}
+            >
+              삭제
+            </Button>
+          </div>
+        )}
+
         <div className="title-div">
           <StyledInput
             type="text"
@@ -225,53 +293,54 @@ function DiaryWritePage() {
             value={formData.title}
             required
             onChange={handleChange}
+            disabled={type === 'view'}
             placeholder="Please enter a title"
           ></StyledInput>
           <SelectButton
+            status={type}
             type="mood"
-            index={mood}
+            index={formData.mood}
             onClick={onClickMoodSelectButton}
           />
           {showMoodSelectModal && (
             <SelectModal
               type="mood"
               setShowSelectModal={setShowMoodSelectModal}
-              setIndex={setMood}
               formData={formData}
               setFormData={setFormData}
             />
           )}
           <SelectButton
+            status={type}
             type="weather"
-            index={weather}
+            index={formData.weather}
             onClick={onClickWeatherSelectButton}
           />
           {showWeatherSelectModal && (
             <SelectModal
               type="weather"
               setShowSelectModal={setShowWeatherSelectModal}
-              setIndex={setWeather}
               formData={formData}
               setFormData={setFormData}
             />
           )}
         </div>
-        {imageUrl && (
+        {formData.image_url && (type === 'write' || type === 'edit') && (
           <Button
             fontSize={12}
             type="button"
             onClick={handleRemoveImageButtonClick}
           >
-            오늘의 사진 삭제하기
+            {type === 'write' ? '오늘의 사진 삭제하기' : '사진 삭제하기'}
           </Button>
         )}
-        {imageUrl === '' && (
+        {formData.image_url === '' && (type === 'write' || type === 'edit') && (
           <Button
             fontSize={12}
             type="button"
             onClick={handleAddImageButtonClick}
           >
-            오늘의 사진 추가하기
+            {type === 'write' ? '오늘의 사진 추가하기' : '사진 추가하기'}
           </Button>
         )}
         <input
@@ -282,8 +351,11 @@ function DiaryWritePage() {
           style={{ display: 'none' }}
         />
         <div className="write-form-section">
-          {imageUrl && (
-            <SelectedImage src={imageUrl} alt="preview"></SelectedImage>
+          {formData.image_url && (
+            <SelectedImage
+              src={formData.image_url}
+              alt="preview"
+            ></SelectedImage>
           )}
           <textarea
             name="content"
@@ -292,12 +364,13 @@ function DiaryWritePage() {
             value={formData.content}
             required
             onChange={handleChange}
+            disabled={type === 'view'}
             placeholder="Please enter a content..."
           ></textarea>
         </div>
       </form>
     </Container>
   );
-}
+};
 
 export default DiaryWritePage;

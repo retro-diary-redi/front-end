@@ -25,8 +25,6 @@ const GlobalStyle = createGlobalStyle`
     height: 100%;
   }
 
-  
-
   body {
     height: 100%;
     font-family: "DungGeunMo";
@@ -57,6 +55,10 @@ const GlobalStyle = createGlobalStyle`
 
   input:focus {
     outline: none;
+  }
+
+  *:disabled {
+    color: black;
   }
 `;
 

@@ -1,4 +1,4 @@
-import { WriteFormProps } from '@/models/DiaryData';
+import { DiaryFormProps } from '@/models/DiaryData';
 import { moodSvgList, weatherSvgList } from '@/utils/images';
 import { Dispatch, SetStateAction } from 'react';
 import styled from 'styled-components';
@@ -28,15 +28,13 @@ const StyledButton = styled.button`
 function SelectModal({
   type,
   setShowSelectModal,
-  setIndex,
   formData,
   setFormData,
 }: {
   type: string;
   setShowSelectModal: Dispatch<SetStateAction<boolean>>;
-  setIndex: Dispatch<SetStateAction<number>>;
-  formData: WriteFormProps;
-  setFormData: Dispatch<SetStateAction<WriteFormProps>>;
+  formData: DiaryFormProps;
+  setFormData: Dispatch<SetStateAction<DiaryFormProps>>;
 }) {
   const moodButtonList = moodSvgList.map((moodSvg, index) => {
     return (
@@ -45,7 +43,6 @@ function SelectModal({
         key={index}
         onClick={() => {
           setShowSelectModal(false);
-          setIndex(index);
           setFormData({
             ...formData,
             mood: index,
@@ -64,7 +61,6 @@ function SelectModal({
         key={index}
         onClick={() => {
           setShowSelectModal(false);
-          setIndex(index);
           setFormData({
             ...formData,
             weather: index,
