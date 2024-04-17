@@ -132,18 +132,28 @@ function DiaryWritePage() {
 
     // TODO: 일기 생성 요청 로직 추가
 
-    /*
     // 서버 요청 시에 사용할 폼 데이터
     const requestFormData = new FormData();
 
+    // 이미지가 있다면 이미지 추가
     if (imageFile !== undefined) requestFormData.append('image_url', imageFile);
-    requestFormData.append(
-      'contents',
-      new Blob([JSON.stringify(formData)], {
-        type: 'application/json',
-      })
-    );
 
+    // Blob 객체로 만든 버전
+    // requestFormData.append(
+    //   'contents',
+    //   new Blob([JSON.stringify(formData)], {
+    //     type: 'application/json',
+    //   })
+    // );
+
+    // 직렬화만 해준 버전 -> 이렇게 해야 아래 console.log로 내용 확인 가능해서 테스트 차 넣어봄
+    requestFormData.append('contents', JSON.stringify(formData));
+
+    // requestFormData 확인
+    console.log(requestFormData.get('contents'));
+    console.log(requestFormData.get('image_url'));
+
+    /*
     // 예시 코드
     post('/write', requestFormData, {
       headers: {
