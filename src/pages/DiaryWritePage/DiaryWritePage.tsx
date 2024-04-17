@@ -3,10 +3,10 @@ import { getToday } from '@/utils/date';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import MoodSelectButton from './MoodSelectButton';
-import WeatherSelectButton from './WeatherSelectButton';
 import MoodSelectModal from './MoodSelectModal';
 import WeatherSelectModal from './WeatherSelectModal';
+import SelectButton from './SelectButton';
+import SelectModal from './SelectModal';
 
 const Container = styled.div`
   height: 100%;
@@ -47,8 +47,7 @@ const Container = styled.div`
     height: 30px;
     position: relative;
 
-    .mood-select-modal,
-    .weather-select-modal {
+    .select-modal {
       position: absolute;
       right: 0;
       top: 40px;
@@ -146,23 +145,30 @@ function DiaryWritePage() {
             onChange={handleChange}
             placeholder="Please enter a title"
           ></StyledInput>
-          <MoodSelectButton mood={mood} onClick={onClickMoodSelectButton} />
+          <SelectButton
+            type="mood"
+            index={mood}
+            onClick={onClickMoodSelectButton}
+          />
           {showMoodSelectModal && (
-            <MoodSelectModal
-              setShowMoodSelectModal={setShowMoodSelectModal}
-              setMood={setMood}
+            <SelectModal
+              type="mood"
+              setShowSelectModal={setShowMoodSelectModal}
+              setIndex={setMood}
               formData={formData}
               setFormData={setFormData}
             />
           )}
-          <WeatherSelectButton
-            weather={weather}
+          <SelectButton
+            type="weather"
+            index={weather}
             onClick={onClickWeatherSelectButton}
           />
           {showWeatherSelectModal && (
-            <WeatherSelectModal
-              setShowWeatherSelectModal={setShowWeatherSelectModal}
-              setWeather={setWeather}
+            <SelectModal
+              type="weather"
+              setShowSelectModal={setShowWeatherSelectModal}
+              setIndex={setWeather}
               formData={formData}
               setFormData={setFormData}
             />
