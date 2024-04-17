@@ -104,6 +104,7 @@ function DiaryWritePage() {
   const [showWeatherSelectModal, setShowWeatherSelectModal] = useState(false);
 
   const [imageUrl, setImageUrl] = useState('');
+  const [imageFile, setImageFile] = useState<File>();
 
   const [formData, setFormData] = useState({
     title: '',
@@ -130,6 +131,26 @@ function DiaryWritePage() {
     console.log(formData);
 
     // TODO: 일기 생성 요청 로직 추가
+
+    /*
+    // 서버 요청 시에 사용할 폼 데이터
+    const requestFormData = new FormData();
+
+    if (imageFile !== undefined) requestFormData.append('image_url', imageFile);
+    requestFormData.append(
+      'contents',
+      new Blob([JSON.stringify(formData)], {
+        type: 'application/json',
+      })
+    );
+
+    // 예시 코드
+    post('/write', requestFormData, {
+      headers: {
+        'Contents-Type': 'multipart/form-data',
+      },
+    });
+    */
   };
 
   const handleAddImageButtonClick = () => {
@@ -143,6 +164,7 @@ function DiaryWritePage() {
       const image = e.target.files[0];
       if (image) {
         setImageUrl(URL.createObjectURL(image));
+        setImageFile(image);
         setFormData({
           ...formData,
           image_url: URL.createObjectURL(image),
