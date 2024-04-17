@@ -3,8 +3,6 @@ import { getToday } from '@/utils/date';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import MoodSelectModal from './MoodSelectModal';
-import WeatherSelectModal from './WeatherSelectModal';
 import SelectButton from './SelectButton';
 import SelectModal from './SelectModal';
 
