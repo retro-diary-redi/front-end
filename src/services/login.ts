@@ -1,11 +1,23 @@
 import API from './API';
 import { LoginRequest, LoginResponse } from '@/models/LoginData';
 
+// export default async function Login(
+//   request: LoginRequest
+// ): Promise<LoginResponse | null> {
+//   try {
+//     const data: LoginResponse = await API.get('/auth/login', request);
+//     return data;
+//   } catch (err) {
+//     console.log(err);
+//     return null;
+//   }
+// }
+
 export default async function Login(
   request: LoginRequest
 ): Promise<LoginResponse | null> {
   try {
-    const data: LoginResponse = await API.post('/auth/login', request);
+    const data: any = await API.post('/auth/loginProc', request);
     return data;
   } catch (err) {
     console.log(err);

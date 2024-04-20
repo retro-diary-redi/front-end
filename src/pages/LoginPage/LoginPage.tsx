@@ -80,11 +80,15 @@ function LoginPage() {
 
     const response = await Login(request);
 
-    if (response && response.status === 'success') {
+    if (response) {
       console.log(response);
-      alert('로그인 되었습니다.');
-      navigate('/');
     }
+
+    // if (response && response.status === 'success') {
+    //   console.log(response);
+    //   alert('로그인 되었습니다.');
+    //   navigate('/');
+    // }
   };
 
   const handleGoogleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -96,7 +100,7 @@ function LoginPage() {
     if (response && response.status === 'success') {
       console.log(response);
       alert('로그인 되었습니다.');
-      navigate('/');
+      // navigate('/');
     }
   };
 
@@ -109,7 +113,7 @@ function LoginPage() {
     if (response && response.status === 'success') {
       console.log(response);
       alert('로그인 되었습니다.');
-      navigate('/');
+      // navigate('/');
     }
   };
 
@@ -122,7 +126,7 @@ function LoginPage() {
     if (response && response.status === 'success') {
       console.log(response);
       alert('로그인 되었습니다.');
-      navigate('/');
+      // navigate('/');
     }
   };
 
