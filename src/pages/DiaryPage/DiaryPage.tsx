@@ -7,6 +7,7 @@ import SelectButton from './SelectButton';
 import SelectModal from './SelectModal';
 import sampleData from '@/utils/sampleData.json';
 import { DiaryFormProps } from '@/models/DiaryData';
+import API from '@/services/API';
 
 const Container = styled.div`
   height: 100%;
@@ -155,7 +156,20 @@ const DiaryWritePage = ({ type }: { type: string }) => {
     e.preventDefault();
 
     alert('저장 버튼 클릭');
-    console.log(formData);
+
+    /* 다이어리 작성 API 테스트 코드 */
+    const postData = {
+      title: formData.title,
+      content: formData.content,
+      mood: formData.mood,
+      weather: formData.weather,
+    };
+
+    API.post('/diaries/write', postData).then((res) => {
+      console.log('다이어리 작성 요청 완료');
+      console.log(res);
+    });
+    /* 다이어리 작성 API 테스트 코드 */
 
     // TODO: 일기 생성 요청 로직 추가
 
@@ -177,8 +191,8 @@ const DiaryWritePage = ({ type }: { type: string }) => {
     requestFormData.append('contents', JSON.stringify(formData));
 
     // requestFormData 확인
-    console.log(requestFormData.get('contents'));
-    console.log(requestFormData.get('image_url'));
+    // console.log(requestFormData.get('contents'));
+    // console.log(requestFormData.get('image_url'));
 
     /*
     // 예시 코드
