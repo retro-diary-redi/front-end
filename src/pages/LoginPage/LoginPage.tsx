@@ -76,19 +76,12 @@ function LoginPage() {
       password: formData.password,
     };
 
-    console.log('request: ' + request);
-
     const response = await Login(request);
 
     if (response) {
-      console.log(response);
+      alert('로그인 되었습니다.');
+      navigate('/');
     }
-
-    // if (response && response.status === 'success') {
-    //   console.log(response);
-    //   alert('로그인 되었습니다.');
-    //   navigate('/');
-    // }
   };
 
   const handleGoogleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {

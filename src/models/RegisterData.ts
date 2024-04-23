@@ -6,11 +6,9 @@ export interface RegisterRequest {
 }
 
 export interface RegisterResponse {
-  status: string;
-  message: string;
-  data: {
-    userId: number;
+  userInfo: {
     username: string;
     nickname: string;
   };
+  message: string;
 }
