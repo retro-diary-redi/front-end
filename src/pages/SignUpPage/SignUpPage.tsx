@@ -1,5 +1,6 @@
 import BoxContainer from '@/components/BoxContainer';
 import Button from '@/components/Button';
+import { Form } from '@/components/Form';
 import { RegisterRequest } from '@/models/RegisterData';
 import Register from '@/services/register';
 import React, { useState } from 'react';
@@ -13,21 +14,6 @@ const Container = styled(BoxContainer)`
   flex-direction: column;
   align-items: center;
   gap: 30px;
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-
-  button {
-    margin-top: 15px;
-  }
-
-  p {
-    font-size: 13px;
-  }
 `;
 
 const Input = styled.input`

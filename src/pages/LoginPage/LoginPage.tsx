@@ -1,8 +1,10 @@
 import BoxContainer from '@/components/BoxContainer';
 import Button from '@/components/Button';
+import { Form } from '@/components/Form';
 import { LoginRequest } from '@/models/LoginData';
 import Login, { GoogleLogin, KakaoLogin, NaverLogin } from '@/services/login';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -31,17 +33,6 @@ const Container = styled(BoxContainer)`
     .text-dark {
       color: #343a40 !important;
     }
-  }
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-
-  button {
-    margin-top: 15px;
   }
 `;
 
@@ -143,6 +134,11 @@ function LoginPage() {
           required
           onChange={handleChange}
         />
+        <Link to="/signup">
+          <p>
+            {'>>'}회원가입 하러가기{'<<'}
+          </p>
+        </Link>
         <Button type="submit" color={'var(--secondary)'}>
           Enter
         </Button>
