@@ -1,4 +1,4 @@
-import { Diary } from '@/models/DiaryData';
+import { Diaries, Diary } from '@/models/DiaryData';
 import API from './API';
 import { AxiosResponse } from 'axios';
 
@@ -48,9 +48,9 @@ export async function GetDiary(date: string): Promise<any> {
   }
 }
 
-export async function GetDiaries(): Promise<any> {
+export async function GetDiaries(): Promise<Diaries | null> {
   try {
-    const response = await API.get(`/diaries`);
+    const response = await API.get(`/diaries`).then((res) => res.data);
     return response;
   } catch (err) {
     console.log(err);

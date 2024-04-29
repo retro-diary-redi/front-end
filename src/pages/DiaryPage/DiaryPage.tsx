@@ -134,10 +134,6 @@ const DiaryWritePage = ({ type }: { type: string }) => {
 
         if (response) {
           setFormData(response.diaryInfo);
-        } else {
-          // 보려는 날짜에 작성된 일기가 없으면 경고 창을 띄우고 되돌아간다.
-          alert('해당 날짜에 작성된 일기가 없습니다.');
-          navigate('/');
         }
       }
 
@@ -297,7 +293,7 @@ const DiaryWritePage = ({ type }: { type: string }) => {
       <Link to="/">
         <button type="button">{'<'} back</button>
       </Link>
-      <p>{today}</p>
+      <p>{params.date}</p>
       <form onSubmit={handleSubmit}>
         {(type === 'write' || type === 'edit') && (
           <Button type="submit" color={`var(--secondary)`} fontSize={12}>

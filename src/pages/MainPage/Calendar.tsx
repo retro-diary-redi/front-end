@@ -1,7 +1,9 @@
 import BoxContainer from '@/components/BoxContainer';
+import { Diaries } from '@/models/DiaryData';
 import moment from 'moment';
-import { ReactElement, useState } from 'react';
+import { ReactElement, useCallback, useState } from 'react';
 import ReactCalendar from 'react-calendar';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 type ValuePiece = Date | null;
@@ -157,6 +159,10 @@ const StyledCalendar = styled(ReactCalendar)`
     background-color: #e6e6e6;
   }
 
+  .diary-exist {
+    background-color: var(--secondary);
+  }
+
   .react-calendar__tile--now {
     background: var(--yellow);
   }
@@ -213,12 +219,41 @@ const RelativeBoxContainer = styled(BoxContainer)`
   }
 `;
 
-function Calendar({ children }: { children: ReactElement }) {
+function Calendar({
+  children,
+  diaries,
+}: {
+  children: ReactElement;
+  diaries?: Diaries;
+}) {
+  const navigate = useNavigate();
   const [value, handleChange] = useState<Value>(new Date());
 
-  const handleDayClick = (value: any, event: any) => {
-    console.log(`날짜 클릭, value: ${value}`);
+  const handleDayClick = (value: any, _: any) => {
+    const stringDate = moment(new Date(value)).format('YYYY-MM-DD');
+
+    if (diaries?.diaryDateList.includes(stringDate)) {
+      navigate(`/view/${stringDate}`);
+    } else {
+      alert('해당 날짜에 작성된 일기가 없습니다.');
+    }
   };
+
+  // 일기가 작성된 날에만 배경 색 변경하기
+  const tileClassName = useCallback(
+    ({ date, view }: { date: any; view: any }) => {
+      if (view === 'month') {
+        if (
+          diaries?.diaryDateList.find(
+            (day) => day === moment(date).format('YYYY-MM-DD')
+          )
+        ) {
+          return 'diary-exist';
+        }
+      }
+    },
+    [diaries]
+  );
 
   return (
     <>
@@ -240,6 +275,7 @@ function Calendar({ children }: { children: ReactElement }) {
           next2Label={null} // +1년 & +10년 이동 버튼 숨기기
           prev2Label={null} // -1년 & -10년 이동 버튼 숨기기
           minDetail="year" // 10년단위 년도 숨기기
+          tileClassName={tileClassName}
         />
         {children}
       </RelativeBoxContainer>

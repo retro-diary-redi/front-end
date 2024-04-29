@@ -21,22 +21,21 @@ function App() {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // useEffect(() => {
-  //   // 현재 유저가 로그인 중인지 확인하는 요청 추가
+  useEffect(() => {
+    // 현재 유저가 로그인 중인지 확인하는 요청 추가
 
-  //   async function getStatus() {
-  //     const status = await Auth();
+    async function getStatus() {
+      const status = await Auth();
 
-  //     if (status === 200) {
-  //       setIsLoggedIn(true);
-  //       navigate('/');
-  //     } else {
-  //       navigate('/landing');
-  //     }
-  //   }
+      if (status === 200) {
+        setIsLoggedIn(true);
+      } else {
+        navigate('/landing');
+      }
+    }
 
-  //   getStatus();
-  // }, []);
+    getStatus();
+  }, []);
 
   return (
     <>
