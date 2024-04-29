@@ -1,11 +1,13 @@
 import styled from 'styled-components';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import MainPage from './pages/MainPage/MainPage';
 import SignUpPage from './pages/SignUpPage/SignUpPage';
 import LoginPage from './pages/LoginPage/LoginPage';
 import DiaryWritePage from './pages/DiaryPage/DiaryPage';
 import NavBar from './components/NavBar';
 import LandingPage from './pages/LandingPage/LandingPage';
+import { useEffect, useState } from 'react';
+import { Auth } from './services/login';
 
 const Container = styled.div`
   display: flex;
@@ -16,9 +18,29 @@ const Container = styled.div`
 `;
 
 function App() {
+  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // useEffect(() => {
+  //   // 현재 유저가 로그인 중인지 확인하는 요청 추가
+
+  //   async function getStatus() {
+  //     const status = await Auth();
+
+  //     if (status === 200) {
+  //       setIsLoggedIn(true);
+  //       navigate('/');
+  //     } else {
+  //       navigate('/landing');
+  //     }
+  //   }
+
+  //   getStatus();
+  // }, []);
+
   return (
     <>
-      <NavBar />
+      <NavBar isLoggedIn={isLoggedIn} />
       <Container>
         <Routes>
           <Route path="/" element={<MainPage />} />

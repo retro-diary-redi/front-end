@@ -28,3 +28,8 @@ export interface OAuth2UserInfoResponse {
   username: string;
   nickname: string;
 }
+
+export interface LoginStatusResponse {
+  message: string;
+  status: boolean;
+}

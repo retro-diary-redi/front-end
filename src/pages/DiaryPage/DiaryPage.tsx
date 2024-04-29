@@ -5,9 +5,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import SelectButton from './SelectButton';
 import SelectModal from './SelectModal';
-import sampleData from '@/utils/sampleData.json';
 import { DiaryFormProps } from '@/models/DiaryData';
-import API from '@/services/API';
+import { Create, Delete, GetDiary, Update } from '@/services/diary';
 
 const Container = styled.div`
   height: 100%;
@@ -127,19 +126,22 @@ const DiaryWritePage = ({ type }: { type: string }) => {
     image_url: '',
   });
 
-  const allData = sampleData;
-
   // 첫 렌더링 시 조회인지 확인하고 데이터 넣어서 보여주기
   useEffect(() => {
     if (type === 'view' || type === 'edit') {
-      const data = allData.find((data) => data.date === params.date);
-      if (data) {
-        setFormData(data);
-      } else {
-        // 보려는 날짜에 작성된 일기가 없으면 경고 창을 띄우고 되돌아간다.
-        alert('해당 날짜에 작성된 일기가 없습니다.');
-        navigate('/');
+      async function getDiary(date: string) {
+        const response = await GetDiary(date);
+
+        if (response) {
+          setFormData(response.diaryInfo);
+        } else {
+          // 보려는 날짜에 작성된 일기가 없으면 경고 창을 띄우고 되돌아간다.
+          alert('해당 날짜에 작성된 일기가 없습니다.');
+          navigate('/');
+        }
       }
+
+      getDiary(params.date as string);
     }
   }, []);
 
@@ -155,21 +157,42 @@ const DiaryWritePage = ({ type }: { type: string }) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    alert('저장 버튼 클릭');
+    if (type === 'write') {
+      /* 다이어리 작성 API 테스트 코드 */
+      const postData = {
+        title: formData.title,
+        content: formData.content,
+        mood: formData.mood,
+        weather: formData.weather,
+      };
 
-    /* 다이어리 작성 API 테스트 코드 */
-    const postData = {
-      title: formData.title,
-      content: formData.content,
-      mood: formData.mood,
-      weather: formData.weather,
-    };
+      const response = await Create(postData, today);
 
-    API.post('/diaries/write', postData).then((res) => {
-      console.log('다이어리 작성 요청 완료');
-      console.log(res);
-    });
-    /* 다이어리 작성 API 테스트 코드 */
+      if (response && response.status === 201) {
+        navigate(`/view/${today}`);
+      } else {
+        alert('일기 작성에 실패했습니다.');
+      }
+      /* 다이어리 작성 API 테스트 코드 */
+    }
+
+    if (type === 'edit') {
+      /* 다이어리 수정 API 테스트 코드 */
+      const postData = {
+        title: formData.title,
+        content: formData.content,
+        mood: formData.mood,
+        weather: formData.weather,
+      };
+
+      const response = await Update(postData, params.date as string);
+      if (response && response.status === 200) {
+        navigate(`/view/${params.date}`);
+      } else {
+        alert('일기 수정에 실패했습니다.');
+      }
+      /* 다이어리 수정 API 테스트 코드 */
+    }
 
     // TODO: 일기 생성 요청 로직 추가
 
@@ -252,17 +275,20 @@ const DiaryWritePage = ({ type }: { type: string }) => {
     });
   };
 
-  const handleDeleteButtonClick = () => {
-    alert('삭제 버튼 클릭');
+  const handleDeleteButtonClick = async () => {
+    if (window.confirm('일기를 정말로 삭제하시겠습니까?')) {
+      const data = await Delete(params.date as string);
 
-    // TODO: 일기 삭제 요청 로직 추가
+      if (data && data.status === 200) {
+        alert('일기가 삭제되었습니다.');
+        navigate('/');
+      } else {
+        alert('일기 삭제에 실패했습니다.');
+      }
+    }
   };
 
   const handleEditButtonClick = () => {
-    alert('수정 버튼 클릭');
-
-    // TODO: 일기 수정 요청 로직 추가
-
     navigate(`/edit/${params.date}`);
   };
 
@@ -271,7 +297,7 @@ const DiaryWritePage = ({ type }: { type: string }) => {
       <Link to="/">
         <button type="button">{'<'} back</button>
       </Link>
-      <p>{today}</p> {/* TODO: 날짜 올바르게 보이도록 수정 */}
+      <p>{today}</p>
       <form onSubmit={handleSubmit}>
         {(type === 'write' || type === 'edit') && (
           <Button type="submit" color={`var(--secondary)`} fontSize={12}>

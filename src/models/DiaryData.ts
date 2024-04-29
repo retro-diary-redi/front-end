@@ -7,3 +7,26 @@ export interface DiaryFormProps {
   weather: number;
   image_url: string;
 }
+
+export interface Diaries {
+  counts: number;
+  message: string;
+  diaryDateList: string[];
+}
+
+export interface Diary {
+  title: string;
+  mood: number;
+  weather: number;
+  content: string;
+}
+
+export interface DiaryInfo {
+  diaryInfo: {
+    title: string;
+    mood: number;
+    weather: number;
+    content: string;
+  };
+  message: string;
+}

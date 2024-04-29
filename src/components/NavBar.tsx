@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-// import { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import API from '@/services/API';
 
 const Wrapper = styled.div`
   border-bottom: 1px solid black;
@@ -13,18 +13,43 @@ const Wrapper = styled.div`
   .right {
     margin-left: auto;
   }
+
+  button {
+    background-color: transparent;
+    border: 0;
+    cursor: pointer;
+  }
 `;
 
-function NavBar() {
-  // TODO: 로그인 상태에 따라 메뉴 이름 다르게 보여주기
+function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
+  const navigate = useNavigate();
+
+  const handleLogOutButton = () => {
+    alert('현재 로그아웃 기능이 제대로 구현되어있지 않습니다.');
+    /**
+    API.get('/logout').then(() => {
+      navigate('/landing');
+    }); */
+  };
 
   return (
     <Wrapper>
       <Link to="/">Home</Link>
-      <p className="right">
-        <Link to="/signup">SignUp</Link>
-      </p>
-      <Link to="/login">Login</Link>
+      {isLoggedIn ? (
+        <>
+          <p className="right">
+            <Link to="/">Profile</Link>
+          </p>
+          <button onClick={handleLogOutButton}>Logout</button>
+        </>
+      ) : (
+        <>
+          <p className="right">
+            <Link to="/signup">SignUp</Link>
+          </p>
+          <Link to="/login">Login</Link>
+        </>
+      )}
     </Wrapper>
   );
 }

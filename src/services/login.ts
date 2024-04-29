@@ -44,3 +44,14 @@ export async function KakaoLogin() {
     return null;
   }
 }
+
+export async function Auth(): Promise<number | boolean> {
+  try {
+    const data: number = await API.get('/auth/status').then(
+      (res) => res.status
+    );
+    return data;
+  } catch (err) {
+    return false;
+  }
+}
