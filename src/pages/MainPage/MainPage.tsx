@@ -15,8 +15,13 @@ const StyledButton = styled(Button)`
   width: 200px;
 `;
 
-function MainPage() {
+function MainPage({ isLoggedIn }: { isLoggedIn: boolean }) {
   const navigate = useNavigate();
+
+  if (!isLoggedIn) {
+    navigate('/landing');
+  }
+
   const today = getToday();
   const [diaries, setDiaries] = useState<Diaries>();
 
