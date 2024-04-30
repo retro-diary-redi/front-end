@@ -22,13 +22,12 @@ function MainPage({ isLoggedIn }: { isLoggedIn: boolean }) {
   const [diaries, setDiaries] = useState<Diaries>();
 
   useEffect(() => {
-    GetDiaries().then((data) => setDiaries(data!!));
-  }, []);
-
-  useEffect(() => {
     if (!isLoggedIn) {
-      navigate('/landing');
+      alert('로그인 해주세요.');
+      navigate('/login');
+      return;
     }
+    GetDiaries().then((data) => setDiaries(data!!));
   }, [isLoggedIn]);
 
   const handleWriteButtonClick = () => {

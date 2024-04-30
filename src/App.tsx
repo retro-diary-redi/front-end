@@ -19,6 +19,7 @@ const Container = styled.div`
 
 function App() {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -28,31 +29,47 @@ function App() {
 
       if (status === 200) {
         setIsLoggedIn(true);
+        navigate('/');
+        setIsLoading(false);
       } else {
         navigate('/landing');
+        setIsLoading(false);
       }
     }
 
     getStatus();
-  }, [isLoggedIn]);
+  }, []);
 
   return (
     <>
-      <NavBar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
-      <Container>
-        <Routes>
-          <Route path="/" element={<MainPage isLoggedIn={isLoggedIn} />} />
-          <Route path="landing" element={<LandingPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
-          <Route
-            path="/login"
-            element={<LoginPage setIsLoggedIn={setIsLoggedIn} />}
-          />
-          <Route path="/write" element={<DiaryWritePage type="write" />} />
-          <Route path="/edit/:date" element={<DiaryWritePage type="edit" />} />
-          <Route path="/view/:date" element={<DiaryWritePage type="view" />} />
-        </Routes>
-      </Container>
+      {isLoading ? (
+        <div>Loading...</div>
+      ) : (
+        <>
+          {' '}
+          <NavBar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+          <Container>
+            <Routes>
+              <Route path="/" element={<MainPage isLoggedIn={isLoggedIn} />} />
+              <Route path="landing" element={<LandingPage />} />
+              <Route path="/signup" element={<SignUpPage />} />
+              <Route
+                path="/login"
+                element={<LoginPage setIsLoggedIn={setIsLoggedIn} />}
+              />
+              <Route path="/write" element={<DiaryWritePage type="write" />} />
+              <Route
+                path="/edit/:date"
+                element={<DiaryWritePage type="edit" />}
+              />
+              <Route
+                path="/view/:date"
+                element={<DiaryWritePage type="view" />}
+              />
+            </Routes>
+          </Container>
+        </>
+      )}
     </>
   );
 }
