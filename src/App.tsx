@@ -22,8 +22,7 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    // 현재 유저가 로그인 중인지 확인하는 요청 추가
-
+    // 현재 유저가 로그인 중인지 확인
     async function getStatus() {
       const status = await Auth();
 
@@ -35,17 +34,20 @@ function App() {
     }
 
     getStatus();
-  }, []);
+  }, [isLoggedIn]);
 
   return (
     <>
-      <NavBar isLoggedIn={isLoggedIn} />
+      <NavBar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
       <Container>
         <Routes>
-          <Route path="/" element={<MainPage />} />
+          <Route path="/" element={<MainPage isLoggedIn={isLoggedIn} />} />
           <Route path="landing" element={<LandingPage />} />
           <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/login"
+            element={<LoginPage setIsLoggedIn={setIsLoggedIn} />}
+          />
           <Route path="/write" element={<DiaryWritePage type="write" />} />
           <Route path="/edit/:date" element={<DiaryWritePage type="edit" />} />
           <Route path="/view/:date" element={<DiaryWritePage type="view" />} />

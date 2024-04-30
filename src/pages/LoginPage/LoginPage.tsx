@@ -3,7 +3,7 @@ import Button from '@/components/Button';
 import { Form } from '@/components/Form';
 import { LoginRequest } from '@/models/LoginData';
 import Login, { GoogleLogin, KakaoLogin, NaverLogin } from '@/services/login';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -44,7 +44,11 @@ const Input = styled.input`
   background-color: transparent;
 `;
 
-function LoginPage() {
+function LoginPage({
+  setIsLoggedIn,
+}: {
+  setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
+}) {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -71,6 +75,7 @@ function LoginPage() {
 
     if (response) {
       alert('로그인 되었습니다.');
+      setIsLoggedIn(true);
       navigate('/');
     }
   };
