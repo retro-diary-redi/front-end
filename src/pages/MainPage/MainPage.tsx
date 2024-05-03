@@ -5,7 +5,7 @@ import Button from '@/components/Button';
 import { useEffect, useState } from 'react';
 import { GetDiaries } from '@/services/diary';
 import { Diaries } from '@/models/DiaryData';
-import { getToday } from '@/utils/date';
+import moment from 'moment';
 
 const StyledButton = styled(Button)`
   position: absolute;
@@ -18,7 +18,7 @@ const StyledButton = styled(Button)`
 function MainPage({ isLoggedIn }: { isLoggedIn: boolean }) {
   const navigate = useNavigate();
 
-  const today = getToday();
+  const today = moment().format('YYYY-MM-DD');
   const [diaries, setDiaries] = useState<Diaries>();
 
   useEffect(() => {

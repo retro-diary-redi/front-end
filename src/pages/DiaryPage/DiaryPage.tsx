@@ -1,5 +1,4 @@
 import Button from '@/components/Button';
-import { getToday } from '@/utils/date';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
