@@ -23,8 +23,7 @@ function MainPage({ isLoggedIn }: { isLoggedIn: boolean }) {
 
   useEffect(() => {
     if (!isLoggedIn) {
-      alert('로그인 해주세요.');
-      navigate('/login');
+      navigate('/landing');
       return;
     }
     GetDiaries().then((data) => setDiaries(data!!));

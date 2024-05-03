@@ -32,12 +32,10 @@ function NavBar({
   const navigate = useNavigate();
 
   const handleLogOutButton = () => {
-    alert('현재 로그아웃 기능이 제대로 구현되어있지 않습니다.');
-    /**
-    API.get('/logout').then(() => {
+    API.post('/auth/logout').then(() => {
       navigate('/landing');
-    }); */
-    // setIsLoggedIn(false);
+    });
+    setIsLoggedIn(false);
   };
 
   return (
