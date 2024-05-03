@@ -111,10 +111,12 @@ const StyledCalendar = styled(ReactCalendar)`
     border-bottom: 1px solid black;
   }
 
+  // 일요일 글씨 빨간색으로 지정
   .react-calendar__month-view__weekdays__weekday--weekend abbr[title='일요일'] {
     color: var(--red);
   }
 
+  // 토요일 글씨 파란색으로 지정
   .react-calendar__month-view__weekdays__weekday--weekend abbr[title='토요일'] {
     color: var(--blue);
   }
@@ -149,26 +151,12 @@ const StyledCalendar = styled(ReactCalendar)`
     border-top: 1px solid black;
   }
 
-  .react-calendar__tile:disabled {
-    background-color: #f0f0f0;
-    color: #ababab;
-  }
-
-  .react-calendar__month-view__days__day--neighboringMonth:disabled,
-  .react-calendar__decade-view__years__year--neighboringDecade:disabled,
-  .react-calendar__century-view__decades__decade--neighboringCentury:disabled {
-    color: #cdcdcd;
-  }
-
-  .react-calendar__tile:enabled:hover {
-    background-color: #e6e6e6;
-  }
-
   // 일기가 있는 날짜의 배경 색 변경
   .diary-exist {
     background-color: var(--secondary);
   }
 
+  // 현재 날짜 타일 스타일
   .react-calendar__tile--now {
     background: none;
     abbr {
@@ -176,7 +164,8 @@ const StyledCalendar = styled(ReactCalendar)`
     }
   }
 
-  .react-calendar--selectRange .react-calendar__tile--hover {
+  // 날짜 타일 호버 스타일
+  .react-calendar__tile:enabled:hover {
     background-color: #e6e6e6;
   }
 `;
