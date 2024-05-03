@@ -72,7 +72,7 @@ const StyledCalendar = styled(ReactCalendar)`
   }
 
   .react-calendar__navigation button:enabled:hover {
-    background-color: #e6e6e6;
+    cursor: pointer;
   }
 
   .react-calendar__month-view__weekdays {
@@ -89,6 +89,7 @@ const StyledCalendar = styled(ReactCalendar)`
   .react-calendar__month-view__weekdays__weekday {
     padding: 15px 10px;
 
+    // 요일 밑줄 제거
     abbr {
       text-decoration: none;
     }
@@ -109,8 +110,13 @@ const StyledCalendar = styled(ReactCalendar)`
     border-left: 1px solid black;
     border-bottom: 1px solid black;
   }
-  .react-calendar__month-view__days__day--weekend {
-    color: #d10000;
+
+  .react-calendar__month-view__weekdays__weekday--weekend abbr[title='일요일'] {
+    color: var(--red);
+  }
+
+  .react-calendar__month-view__weekdays__weekday--weekend abbr[title='토요일'] {
+    color: var(--blue);
   }
 
   .react-calendar__month-view__days__day--neighboringMonth,
@@ -154,40 +160,20 @@ const StyledCalendar = styled(ReactCalendar)`
     color: #cdcdcd;
   }
 
-  .react-calendar__tile:enabled:hover,
-  .react-calendar__tile:enabled:focus {
+  .react-calendar__tile:enabled:hover {
     background-color: #e6e6e6;
   }
 
+  // 일기가 있는 날짜의 배경 색 변경
   .diary-exist {
     background-color: var(--secondary);
   }
 
   .react-calendar__tile--now {
-    background: var(--yellow);
-  }
-
-  .react-calendar__tile--now:enabled:hover,
-  .react-calendar__tile--now:enabled:focus {
-    background: #ffffa9;
-  }
-
-  .react-calendar__tile--hasActive {
-    background: #76baff;
-  }
-
-  .react-calendar__tile--hasActive:enabled:hover,
-  .react-calendar__tile--hasActive:enabled:focus {
-    background: #ffa9a9;
-  }
-
-  .react-calendar__tile--active {
-    background: #d6e5f3;
-  }
-
-  .react-calendar__tile--active:enabled:hover,
-  .react-calendar__tile--active:enabled:focus {
-    background: #d6e5f3;
+    background: none;
+    abbr {
+      text-decoration: underline;
+    }
   }
 
   .react-calendar--selectRange .react-calendar__tile--hover {
@@ -230,12 +216,23 @@ function Calendar({
   const [value, handleChange] = useState<Value>(new Date());
 
   const handleDayClick = (value: any, _: any) => {
-    const stringDate = moment(new Date(value)).format('YYYY-MM-DD');
+    const clickedDay = moment(new Date(value));
+    const stringDate = clickedDay.format('YYYY-MM-DD');
 
     if (diaries?.diaryDateList.includes(stringDate)) {
       navigate(`/view/${stringDate}`);
     } else {
-      alert('해당 날짜에 작성된 일기가 없습니다.');
+      if (moment().isBefore(clickedDay)) {
+        alert('미래의 일기는 작성할 수 없습니다.');
+        return;
+      }
+      if (
+        confirm(
+          '해당 날짜에 작성된 일기가 없습니다. 새로 일기를 작성하시겠습니까?'
+        )
+      ) {
+        navigate(`/write/${stringDate}`);
+      }
     }
   };
 

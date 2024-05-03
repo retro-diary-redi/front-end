@@ -26,14 +26,17 @@ function MainPage({ isLoggedIn }: { isLoggedIn: boolean }) {
       navigate('/landing');
       return;
     }
-    GetDiaries().then((data) => setDiaries(data!!));
   }, [isLoggedIn]);
+
+  useEffect(() => {
+    GetDiaries().then((data) => setDiaries(data!!));
+  });
 
   const handleWriteButtonClick = () => {
     if (diaries?.diaryDateList.includes(today)) {
       navigate(`/view/${today}`);
     } else {
-      navigate('/write');
+      navigate(`/write/${today}`);
     }
   };
 

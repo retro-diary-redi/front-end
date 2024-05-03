@@ -108,19 +108,18 @@ const DiaryWritePage = ({ type }: { type: string }) => {
   const navigate = useNavigate();
   const params = useParams();
 
-  const today = getToday();
   const fileInput = useRef(null);
 
   const [showMoodSelectModal, setShowMoodSelectModal] = useState(false);
   const [showWeatherSelectModal, setShowWeatherSelectModal] = useState(false);
 
-  // 혹시 나중에 이미지 상태를 따로 관리해야 할 경우를 대비해 살려둠
+  // 이미지 파일 상태
   const [imageFile, setImageFile] = useState<File>();
 
   const [formData, setFormData] = useState<DiaryFormProps>({
     title: '',
     content: '',
-    date: today,
+    date: params.date!,
     mood: 0,
     weather: 0,
     image_url: '',
@@ -153,77 +152,50 @@ const DiaryWritePage = ({ type }: { type: string }) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (type === 'write') {
-      /* 다이어리 작성 API 테스트 코드 */
-      const postData = {
-        title: formData.title,
-        content: formData.content,
-        mood: formData.mood,
-        weather: formData.weather,
-      };
+    // 서버 요청 시에 사용할 폼 데이터
+    const formDataRequest = new FormData();
 
-      const response = await Create(postData, today);
+    // 이미지가 있다면 이미지 추가
+    if (imageFile !== undefined) formDataRequest.append('images', imageFile);
+
+    const diaryWriteRequestDTO = {
+      title: formData.title,
+      content: formData.content,
+      mood: formData.mood,
+      weather: formData.weather,
+    };
+
+    formDataRequest.append(
+      'diaryWriteRequestDTO',
+      new Blob([JSON.stringify(diaryWriteRequestDTO)], {
+        type: 'application/json',
+      })
+    );
+
+    /* 다이어리 작성 API 테스트 코드 */
+    if (type === 'write') {
+      const response = await Create(formDataRequest, params.date!);
 
       if (response && response.status === 201) {
-        navigate(`/view/${today}`);
+        navigate(`/view/${params.date!}`);
+        return;
       } else {
         alert('일기 작성에 실패했습니다.');
+        return;
       }
-      /* 다이어리 작성 API 테스트 코드 */
     }
 
+    /* 다이어리 수정 API 테스트 코드 */
     if (type === 'edit') {
-      /* 다이어리 수정 API 테스트 코드 */
-      const postData = {
-        title: formData.title,
-        content: formData.content,
-        mood: formData.mood,
-        weather: formData.weather,
-      };
+      const response = await Update(formDataRequest, params.date as string);
 
-      const response = await Update(postData, params.date as string);
       if (response && response.status === 200) {
         navigate(`/view/${params.date}`);
       } else {
         alert('일기 수정에 실패했습니다.');
+        return;
       }
-      /* 다이어리 수정 API 테스트 코드 */
     }
-
-    // TODO: 일기 생성 요청 로직 추가
-
-    // 서버 요청 시에 사용할 폼 데이터
-    const requestFormData = new FormData();
-
-    // 이미지가 있다면 이미지 추가
-    if (imageFile !== undefined) requestFormData.append('image_url', imageFile);
-
-    // Blob 객체로 만든 버전
-    // requestFormData.append(
-    //   'contents',
-    //   new Blob([JSON.stringify(formData)], {
-    //     type: 'application/json',
-    //   })
-    // );
-
-    // 직렬화만 해준 버전 -> 이렇게 해야 아래 console.log로 내용 확인 가능해서 테스트 차 넣어봄
-    requestFormData.append('contents', JSON.stringify(formData));
-
-    // requestFormData 확인
-    // console.log(requestFormData.get('contents'));
-    // console.log(requestFormData.get('image_url'));
-
-    /*
-    // 예시 코드
-    post('/write', requestFormData, {
-      headers: {
-        'Contents-Type': 'multipart/form-data',
-      },
-    });
-    */
-
-    // TODO: URL 라우팅 처리 필요
-    navigate(`/view/${params.date || today}`);
   };
 
   const handleAddImageButtonClick = () => {
@@ -235,6 +207,7 @@ const DiaryWritePage = ({ type }: { type: string }) => {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const image = e.target.files[0];
+
       if (image) {
         setImageFile(image);
         setFormData({

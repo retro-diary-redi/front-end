@@ -1,13 +1,21 @@
-import { Diaries, Diary } from '@/models/DiaryData';
+import { Diaries } from '@/models/DiaryData';
 import API from './API';
 import { AxiosResponse } from 'axios';
 
 export async function Create(
-  request: Diary,
+  request: FormData,
   date: string
 ): Promise<AxiosResponse | null> {
   try {
-    const response: any = await API.post(`/diaries/${date}/write`, request);
+    const response: AxiosResponse = await API.post(
+      `/diaries/${date}/write`,
+      request,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
 
     return response;
   } catch (err) {

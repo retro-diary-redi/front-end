@@ -57,7 +57,10 @@ function App() {
                 path="/login"
                 element={<LoginPage setIsLoggedIn={setIsLoggedIn} />}
               />
-              <Route path="/write" element={<DiaryWritePage type="write" />} />
+              <Route
+                path="/write/:date"
+                element={<DiaryWritePage type="write" />}
+              />
               <Route
                 path="/edit/:date"
                 element={<DiaryWritePage type="edit" />}
