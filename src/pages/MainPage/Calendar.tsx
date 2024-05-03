@@ -9,6 +9,81 @@ import styled from 'styled-components';
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
+const Calendar = ({
+  children,
+  diaries,
+}: {
+  children: ReactElement;
+  diaries?: Diaries;
+}) => {
+  const navigate = useNavigate();
+  const [value, handleChange] = useState<Value>(new Date());
+
+  const handleDayClick = (value: any, _: any) => {
+    const clickedDay = moment(new Date(value));
+    const stringDate = clickedDay.format('YYYY-MM-DD');
+
+    if (diaries?.diaryDateList.includes(stringDate)) {
+      navigate(`/view/${stringDate}`);
+    } else {
+      if (moment().isBefore(clickedDay)) {
+        alert('미래의 일기는 작성할 수 없습니다.');
+        return;
+      }
+      if (
+        confirm(
+          '해당 날짜에 작성된 일기가 없습니다. 새로 일기를 작성하시겠습니까?'
+        )
+      ) {
+        navigate(`/write/${stringDate}`);
+      }
+    }
+  };
+
+  // 일기가 작성된 날에만 배경 색 변경하기
+  const tileClassName = useCallback(
+    ({ date, view }: { date: any; view: any }) => {
+      if (view === 'month') {
+        if (
+          diaries?.diaryDateList.find(
+            (day) => day === moment(date).format('YYYY-MM-DD')
+          )
+        ) {
+          return 'diary-exist';
+        }
+      }
+    },
+    [diaries]
+  );
+
+  return (
+    <>
+      <RelativeBoxContainer width={400} height={500}>
+        <div className="top-decoration">
+          <div className="line"></div>
+          <div className="line"></div>
+          <div className="line"></div>
+        </div>
+        <StyledCalendar
+          onChange={handleChange}
+          onClickDay={handleDayClick} // 날짜 클릭 이벤트 핸들러
+          value={value}
+          formatDay={(_, date) => moment(date).format('D')} // 일 제거 숫자만 보이게
+          formatYear={(_, date) => moment(date).format('YYYY')} // 네비게이션 눌렀을때 숫자 년도만 보이게
+          formatMonthYear={(_, date) => moment(date).format('YYYY. MM')} // 네비게이션에서 2023. 12 이렇게 보이도록 설정
+          calendarType="gregory" // 일요일 부터 시작
+          showFixedNumberOfWeeks={true} // 항상 6주 고정으로 표시
+          next2Label={null} // +1년 & +10년 이동 버튼 숨기기
+          prev2Label={null} // -1년 & -10년 이동 버튼 숨기기
+          minDetail="year" // 10년단위 년도 숨기기
+          tileClassName={tileClassName}
+        />
+        {children}
+      </RelativeBoxContainer>
+    </>
+  );
+};
+
 const StyledCalendar = styled(ReactCalendar)`
   position: relative;
   width: 370px;
@@ -193,80 +268,5 @@ const RelativeBoxContainer = styled(BoxContainer)`
     }
   }
 `;
-
-function Calendar({
-  children,
-  diaries,
-}: {
-  children: ReactElement;
-  diaries?: Diaries;
-}) {
-  const navigate = useNavigate();
-  const [value, handleChange] = useState<Value>(new Date());
-
-  const handleDayClick = (value: any, _: any) => {
-    const clickedDay = moment(new Date(value));
-    const stringDate = clickedDay.format('YYYY-MM-DD');
-
-    if (diaries?.diaryDateList.includes(stringDate)) {
-      navigate(`/view/${stringDate}`);
-    } else {
-      if (moment().isBefore(clickedDay)) {
-        alert('미래의 일기는 작성할 수 없습니다.');
-        return;
-      }
-      if (
-        confirm(
-          '해당 날짜에 작성된 일기가 없습니다. 새로 일기를 작성하시겠습니까?'
-        )
-      ) {
-        navigate(`/write/${stringDate}`);
-      }
-    }
-  };
-
-  // 일기가 작성된 날에만 배경 색 변경하기
-  const tileClassName = useCallback(
-    ({ date, view }: { date: any; view: any }) => {
-      if (view === 'month') {
-        if (
-          diaries?.diaryDateList.find(
-            (day) => day === moment(date).format('YYYY-MM-DD')
-          )
-        ) {
-          return 'diary-exist';
-        }
-      }
-    },
-    [diaries]
-  );
-
-  return (
-    <>
-      <RelativeBoxContainer width={400} height={500}>
-        <div className="top-decoration">
-          <div className="line"></div>
-          <div className="line"></div>
-          <div className="line"></div>
-        </div>
-        <StyledCalendar
-          onChange={handleChange}
-          onClickDay={handleDayClick} // 날짜 클릭 이벤트 핸들러
-          value={value}
-          formatDay={(_, date) => moment(date).format('D')} // 일 제거 숫자만 보이게
-          formatYear={(_, date) => moment(date).format('YYYY')} // 네비게이션 눌렀을때 숫자 년도만 보이게
-          formatMonthYear={(_, date) => moment(date).format('YYYY. MM')} // 네비게이션에서 2023. 12 이렇게 보이도록 설정
-          calendarType="gregory" // 일요일 부터 시작
-          showFixedNumberOfWeeks={true} // 항상 6주 고정으로 표시
-          next2Label={null} // +1년 & +10년 이동 버튼 숨기기
-          prev2Label={null} // -1년 & -10년 이동 버튼 숨기기
-          minDetail="year" // 10년단위 년도 숨기기
-          tileClassName={tileClassName}
-        />
-        {children}
-      </RelativeBoxContainer>
-    </>
-  );
-}
 
 export default Calendar;

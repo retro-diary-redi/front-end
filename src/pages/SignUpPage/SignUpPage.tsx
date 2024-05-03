@@ -8,22 +8,6 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
-const Container = styled(BoxContainer)`
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-  gap: 30px;
-`;
-
-const Input = styled.input`
-  width: 300px;
-  height: 40px;
-  border: 1px solid black;
-  padding: 0 10px;
-  background-color: transparent;
-`;
-
 function SignUpPage() {
   const navigate = useNavigate();
 
@@ -79,8 +63,6 @@ function SignUpPage() {
       nickname: formData.nickname,
       email: formData.email,
     };
-
-    console.log('request:' + request);
 
     const response = await Register(request);
 
@@ -146,5 +128,21 @@ function SignUpPage() {
     </Container>
   );
 }
+
+const Container = styled(BoxContainer)`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+`;
+
+const Input = styled.input`
+  width: 300px;
+  height: 40px;
+  border: 1px solid black;
+  padding: 0 10px;
+  background-color: transparent;
+`;
 
 export default SignUpPage;

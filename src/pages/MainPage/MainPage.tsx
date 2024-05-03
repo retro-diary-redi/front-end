@@ -7,14 +7,6 @@ import { GetDiaries } from '@/services/diary';
 import { Diaries } from '@/models/DiaryData';
 import moment from 'moment';
 
-const StyledButton = styled(Button)`
-  position: absolute;
-  left: 440px;
-  top: 50px;
-
-  width: 200px;
-`;
-
 function MainPage({ isLoggedIn }: { isLoggedIn: boolean }) {
   const navigate = useNavigate();
 
@@ -30,7 +22,7 @@ function MainPage({ isLoggedIn }: { isLoggedIn: boolean }) {
 
   useEffect(() => {
     GetDiaries().then((data) => setDiaries(data!!));
-  });
+  }, []);
 
   const handleWriteButtonClick = () => {
     if (diaries?.diaryDateList.includes(today)) {
@@ -48,5 +40,12 @@ function MainPage({ isLoggedIn }: { isLoggedIn: boolean }) {
     </Calendar>
   );
 }
+
+const StyledButton = styled(Button)`
+  position: absolute;
+  left: 440px;
+  top: 50px;
+  width: 200px;
+`;
 
 export default MainPage;

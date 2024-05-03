@@ -9,15 +9,7 @@ import LandingPage from './pages/LandingPage/LandingPage';
 import { useEffect, useState } from 'react';
 import { Auth } from './services/login';
 
-const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: -30px 0;
-  height: 100%;
-`;
-
-function App() {
+const App = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -46,7 +38,6 @@ function App() {
         <div>Loading...</div>
       ) : (
         <>
-          {' '}
           <NavBar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
           <Container>
             <Routes>
@@ -75,6 +66,14 @@ function App() {
       )}
     </>
   );
-}
+};
+
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: -30px 0;
+  height: 100%;
+`;
 
 export default App;

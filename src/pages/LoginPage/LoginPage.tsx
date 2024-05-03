@@ -8,47 +8,11 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
-const Container = styled(BoxContainer)`
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-  gap: 30px;
-
-  > .social-login-buttons {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-
-    > button {
-      outline: 0;
-      border: 1px solid transparent;
-      padding: 0.5rem !important;
-      border-radius: 50%;
-      color: #fff;
-      cursor: pointer;
-    }
-
-    .text-dark {
-      color: #343a40 !important;
-    }
-  }
-`;
-
-const Input = styled.input`
-  width: 300px;
-  height: 40px;
-  border: 1px solid black;
-  padding: 0 10px;
-  background-color: transparent;
-`;
-
-function LoginPage({
+const LoginPage = ({
   setIsLoggedIn,
 }: {
   setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
-}) {
+}) => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -174,6 +138,42 @@ function LoginPage({
       </div>
     </Container>
   );
-}
+};
+
+const Container = styled(BoxContainer)`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+
+  > .social-login-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    > button {
+      outline: 0;
+      border: 1px solid transparent;
+      padding: 0.5rem !important;
+      border-radius: 50%;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .text-dark {
+      color: #343a40 !important;
+    }
+  }
+`;
+
+const Input = styled.input`
+  width: 300px;
+  height: 40px;
+  border: 1px solid black;
+  padding: 0 10px;
+  background-color: transparent;
+`;
 
 export default LoginPage;

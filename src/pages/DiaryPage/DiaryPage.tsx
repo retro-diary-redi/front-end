@@ -7,102 +7,6 @@ import SelectModal from './SelectModal';
 import { DiaryFormProps } from '@/models/DiaryData';
 import { Create, Delete, GetDiary, Update } from '@/services/diary';
 
-const Container = styled.div`
-  height: 100%;
-  width: 100%;
-  margin-top: 100px;
-  padding: 10px 70px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-
-  a > button {
-    margin-bottom: 5px;
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-  }
-
-  form {
-    margin-top: 5px;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 15px;
-
-    > button:first-child {
-      align-self: flex-end;
-      margin-top: -45px;
-    }
-
-    .write-form-section {
-      display: flex;
-      gap: 20px;
-      width: 100%;
-
-      textarea {
-        box-sizing: border-box;
-        resize: none;
-        min-height: 500px;
-        padding: 10px;
-        background-color: transparent;
-        border: 1px solid black;
-        flex-grow: 1;
-      }
-    }
-
-    .view-buttons {
-      align-self: flex-end;
-      margin-top: -45px;
-
-      > button:first-child {
-        margin-right: 10px;
-      }
-    }
-  }
-
-  .title-div {
-    display: flex;
-    width: 100%;
-    gap: 10px;
-    height: 30px;
-    position: relative;
-
-    .select-modal {
-      position: absolute;
-      right: 0;
-      top: 40px;
-      box-shadow: 4px 4px rgb(0 0 0 / 20%);
-    }
-  }
-
-  textarea:focus {
-    outline: none;
-  }
-`;
-
-const StyledInput = styled.input`
-  height: 32px;
-  border: 1px solid black;
-  box-shadow: 4px 4px rgb(0 0 0 / 20%);
-  flex-grow: 1;
-  padding: 10px;
-  background: none;
-`;
-
-const SelectedImage = styled.img`
-  min-width: 500px;
-  max-width: 500px;
-  min-height: 500px;
-  max-height: 500px;
-  padding: 10px;
-  object-fit: cover;
-  border: 1px solid black;
-`;
-
 const DiaryWritePage = ({ type }: { type: string }) => {
   const navigate = useNavigate();
   const params = useParams();
@@ -112,7 +16,7 @@ const DiaryWritePage = ({ type }: { type: string }) => {
   const [showMoodSelectModal, setShowMoodSelectModal] = useState(false);
   const [showWeatherSelectModal, setShowWeatherSelectModal] = useState(false);
 
-  // 이미지 파일 상태
+  // 이미지 파일
   const [imageFile, setImageFile] = useState<File>();
 
   const [formData, setFormData] = useState<DiaryFormProps>({
@@ -380,5 +284,101 @@ const DiaryWritePage = ({ type }: { type: string }) => {
     </Container>
   );
 };
+
+const Container = styled.div`
+  height: 100%;
+  width: 100%;
+  margin-top: 100px;
+  padding: 10px 70px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  a > button {
+    margin-bottom: 5px;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  form {
+    margin-top: 5px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+
+    > button:first-child {
+      align-self: flex-end;
+      margin-top: -45px;
+    }
+
+    .write-form-section {
+      display: flex;
+      gap: 20px;
+      width: 100%;
+
+      textarea {
+        box-sizing: border-box;
+        resize: none;
+        min-height: 500px;
+        padding: 10px;
+        background-color: transparent;
+        border: 1px solid black;
+        flex-grow: 1;
+      }
+    }
+
+    .view-buttons {
+      align-self: flex-end;
+      margin-top: -45px;
+
+      > button:first-child {
+        margin-right: 10px;
+      }
+    }
+  }
+
+  .title-div {
+    display: flex;
+    width: 100%;
+    gap: 10px;
+    height: 30px;
+    position: relative;
+
+    .select-modal {
+      position: absolute;
+      right: 0;
+      top: 40px;
+      box-shadow: 4px 4px rgb(0 0 0 / 20%);
+    }
+  }
+
+  textarea:focus {
+    outline: none;
+  }
+`;
+
+const StyledInput = styled.input`
+  height: 32px;
+  border: 1px solid black;
+  box-shadow: 4px 4px rgb(0 0 0 / 20%);
+  flex-grow: 1;
+  padding: 10px;
+  background: none;
+`;
+
+const SelectedImage = styled.img`
+  min-width: 500px;
+  max-width: 500px;
+  min-height: 500px;
+  max-height: 500px;
+  padding: 10px;
+  object-fit: cover;
+  border: 1px solid black;
+`;
 
 export default DiaryWritePage;

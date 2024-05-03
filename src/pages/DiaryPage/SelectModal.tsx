@@ -3,39 +3,19 @@ import { moodSvgList, weatherSvgList } from '@/utils/images';
 import { Dispatch, SetStateAction } from 'react';
 import styled from 'styled-components';
 
-const StyledButton = styled.button`
-  padding: 0;
-
-  width: 32px;
-  height: 32px;
-  background-color: transparent;
-  border: 1px solid black;
-
-  &:hover {
-    background-color: var(--secondary);
-    cursor: pointer;
-  }
-
-  img {
-    width: 22px;
-    height: 22px;
-    object-fit: contain;
-    vertical-align: middle;
-    margin: auto;
-  }
-`;
+interface Props {
+  type: string;
+  setShowSelectModal: Dispatch<SetStateAction<boolean>>;
+  formData: DiaryFormProps;
+  setFormData: Dispatch<SetStateAction<DiaryFormProps>>;
+}
 
 function SelectModal({
   type,
   setShowSelectModal,
   formData,
   setFormData,
-}: {
-  type: string;
-  setShowSelectModal: Dispatch<SetStateAction<boolean>>;
-  formData: DiaryFormProps;
-  setFormData: Dispatch<SetStateAction<DiaryFormProps>>;
-}) {
+}: Props) {
   const moodButtonList = moodSvgList.map((moodSvg, index) => {
     return (
       <StyledButton
@@ -79,5 +59,27 @@ function SelectModal({
     </div>
   );
 }
+
+const StyledButton = styled.button`
+  padding: 0;
+
+  width: 32px;
+  height: 32px;
+  background-color: transparent;
+  border: 1px solid black;
+
+  &:hover {
+    background-color: var(--secondary);
+    cursor: pointer;
+  }
+
+  img {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    vertical-align: middle;
+    margin: auto;
+  }
+`;
 
 export default SelectModal;
