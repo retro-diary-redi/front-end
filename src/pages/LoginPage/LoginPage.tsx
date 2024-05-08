@@ -2,7 +2,8 @@ import BoxContainer from '@/components/BoxContainer';
 import Button from '@/components/Button';
 import { Form } from '@/components/Form';
 import { LoginRequest } from '@/models/LoginData';
-import Login, { GoogleLogin, KakaoLogin, NaverLogin } from '@/services/login';
+import { KAKAO_AUTH_URL, NAVER_AUTH_URL } from '@/services/Oauth';
+import Login from '@/services/login';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -44,45 +45,6 @@ const LoginPage = ({
     }
   };
 
-  const handleGoogleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-
-    // TODO: 구글 로그인 요청
-    const response = await GoogleLogin();
-
-    if (response && response.status === 'success') {
-      console.log(response);
-      alert('로그인 되었습니다.');
-      // navigate('/');
-    }
-  };
-
-  const handleNaverLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-
-    // TODO: 네이버 로그인 요청
-    const response = await NaverLogin();
-
-    if (response && response.status === 'success') {
-      console.log(response);
-      alert('로그인 되었습니다.');
-      // navigate('/');
-    }
-  };
-
-  const handleKakaoLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-
-    // TODO: 카카오 로그인 요청
-    const response = await KakaoLogin();
-
-    if (response && response.status === 'success') {
-      console.log(response);
-      alert('로그인 되었습니다.');
-      // navigate('/');
-    }
-  };
-
   return (
     <Container width={400} height={400}>
       <h1>Login</h1>
@@ -117,23 +79,26 @@ const LoginPage = ({
         <button
           className="btn-social-login"
           style={{ backgroundColor: '#D93025' }}
-          onClick={handleGoogleLogin}
         >
-          <i className="xi-2x xi-google"></i>
+          <a href="#">
+            <i className="xi-2x xi-google"></i>{' '}
+          </a>
         </button>
         <button
           className="btn-social-login"
           style={{ backgroundColor: '#1FC700' }}
-          onClick={handleNaverLogin}
         >
-          <i className="xi-2x xi-naver"></i>
+          <a href={NAVER_AUTH_URL}>
+            <i className="xi-2x xi-naver"></i>
+          </a>
         </button>
         <button
           className="btn-social-login"
           style={{ backgroundColor: '#FFEB00' }}
-          onClick={handleKakaoLogin}
         >
-          <i className="xi-2x xi-kakaotalk text-dark"></i>
+          <a href={KAKAO_AUTH_URL}>
+            <i className="xi-2x xi-kakaotalk text-dark"></i>
+          </a>
         </button>
       </div>
     </Container>

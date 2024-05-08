@@ -47,7 +47,6 @@ export async function Delete(date: string): Promise<AxiosResponse | null> {
   }
 }
 
-// TODO: any -> Diary로 수정
 export async function GetDiary(date: string): Promise<DiaryInfo | null> {
   try {
     const response = await API.get(`/diaries/${date}`).then(

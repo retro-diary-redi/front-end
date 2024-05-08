@@ -15,36 +15,6 @@ export default async function Login(
   }
 }
 
-export async function GoogleLogin() {
-  try {
-    const data: LoginResponse = await API.get('/oauth2/authorization/google');
-    return data;
-  } catch (err) {
-    console.log(err);
-    return null;
-  }
-}
-
-export async function NaverLogin() {
-  try {
-    const data: LoginResponse = await API.get('/oauth2/authorization/naver');
-    return data;
-  } catch (err) {
-    console.log(err);
-    return null;
-  }
-}
-
-export async function KakaoLogin() {
-  try {
-    const data: LoginResponse = await API.get('/oauth2/authorization/kakao');
-    return data;
-  } catch (err) {
-    console.log(err);
-    return null;
-  }
-}
-
 export async function Auth(): Promise<number | boolean> {
   try {
     const data: number = await API.get('/auth/status').then(

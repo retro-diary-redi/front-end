@@ -8,33 +8,34 @@ import NavBar from './components/NavBar';
 import LandingPage from './pages/LandingPage/LandingPage';
 import { useEffect, useState } from 'react';
 import { Auth } from './services/login';
+import LoginHandlerPage from './pages/LoginPage/LoginHandlerPage';
 
 const App = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  useEffect(() => {
-    // 현재 유저가 로그인 중인지 확인
-    async function getStatus() {
-      const status = await Auth();
+  // useEffect(() => {
+  //   // 현재 유저가 로그인 중인지 확인
+  //   async function getStatus() {
+  //     const status = await Auth();
 
-      if (status === 200) {
-        setIsLoggedIn(true);
-        navigate('/');
-        setIsLoading(false);
-      } else {
-        navigate('/landing');
-        setIsLoading(false);
-      }
-    }
+  //     if (status === 200) {
+  //       setIsLoggedIn(true);
+  //       navigate('/');
+  //       setIsLoading(false);
+  //     } else {
+  //       navigate('/landing');
+  //       setIsLoading(false);
+  //     }
+  //   }
 
-    getStatus();
-  }, []);
+  //   getStatus();
+  // }, []);
 
   return (
     <>
-      {isLoading ? (
+      {!isLoading ? (
         <div>Loading...</div>
       ) : (
         <>
@@ -43,6 +44,10 @@ const App = () => {
             <Routes>
               <Route path="/" element={<MainPage isLoggedIn={isLoggedIn} />} />
               <Route path="landing" element={<LandingPage />} />
+              <Route
+                path="/login/oauth/callback/:platform"
+                element={<LoginHandlerPage />}
+              />
               <Route path="/signup" element={<SignUpPage />} />
               <Route
                 path="/login"
