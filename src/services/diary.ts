@@ -1,4 +1,4 @@
-import { Diaries } from '@/models/DiaryData';
+import { Diaries, DiaryInfo } from '@/models/DiaryData';
 import API from './API';
 import { AxiosResponse } from 'axios';
 
@@ -24,7 +24,10 @@ export async function Create(
   }
 }
 
-export async function Update(request: any, date: string): Promise<any> {
+export async function Update(
+  request: FormData,
+  date: string
+): Promise<AxiosResponse | null> {
   try {
     const response = await API.put(`/diaries/${date}/update`, request);
     return response;
@@ -44,7 +47,8 @@ export async function Delete(date: string): Promise<AxiosResponse | null> {
   }
 }
 
-export async function GetDiary(date: string): Promise<any> {
+// TODO: any -> Diary로 수정
+export async function GetDiary(date: string): Promise<DiaryInfo | null> {
   try {
     const response = await API.get(`/diaries/${date}`).then(
       (response) => response.data

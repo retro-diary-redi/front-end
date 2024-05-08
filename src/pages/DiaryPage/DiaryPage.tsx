@@ -33,9 +33,17 @@ const DiaryWritePage = ({ type }: { type: string }) => {
     if (type === 'view' || type === 'edit') {
       async function getDiary(date: string) {
         const response = await GetDiary(date);
+        const diaryInfo = response!.diaryInfo;
 
         if (response) {
-          setFormData(response.diaryInfo);
+          setFormData({
+            title: diaryInfo.title,
+            content: diaryInfo.content,
+            date: params.date!,
+            mood: diaryInfo.mood,
+            weather: diaryInfo.weather,
+            image_url: diaryInfo.savedFilenames[0],
+          });
         }
       }
 
