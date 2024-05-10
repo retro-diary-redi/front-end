@@ -1,17 +1,16 @@
+import { AxiosResponse } from 'axios';
 import API from './API';
 import { LoginRequest, LoginResponse } from '@/models/LoginData';
 
 export default async function Login(
   request: LoginRequest
-): Promise<LoginResponse | null> {
+): Promise<AxiosResponse<LoginResponse>> {
   try {
-    const data: LoginResponse = await API.post('/auth/loginProc', request).then(
-      (res) => res.data
-    );
+    const data = await API.post('/auth/loginProc', request);
     return data;
-  } catch (err) {
-    console.log(err);
-    return null;
+  } catch (err: any) {
+    const errMsg = err.response.data.message;
+    return errMsg;
   }
 }
 

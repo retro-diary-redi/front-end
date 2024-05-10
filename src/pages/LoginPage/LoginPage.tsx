@@ -38,10 +38,16 @@ const LoginPage = ({
 
     const response = await Login(request);
 
-    if (response) {
+    if (response && response.status === 200) {
       alert('로그인 되었습니다.');
       setIsLoggedIn(true);
       navigate('/');
+    } else {
+      alert(`${response}`);
+      setFormData({
+        id: '',
+        password: '',
+      });
     }
   };
 

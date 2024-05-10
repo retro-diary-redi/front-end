@@ -66,9 +66,15 @@ function SignUpPage() {
 
     const response = await Register(request);
 
-    if (response && response.message === 'Registration Successful.') {
+    if (response && response.status === 201) {
       alert('회원가입이 완료되었습니다. 로그인해주세요.');
       navigate('/login');
+    } else {
+      alert(`${response}`);
+      setFormData({
+        ...formData,
+        email: '',
+      });
     }
   };
 
