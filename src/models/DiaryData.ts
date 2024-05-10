@@ -27,6 +27,7 @@ export interface DiaryInfo {
     mood: number;
     weather: number;
     content: string;
+    nickname: string;
     savedFilenames: string[];
   };
   message: string;

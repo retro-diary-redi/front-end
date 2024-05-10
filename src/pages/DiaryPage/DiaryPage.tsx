@@ -33,7 +33,7 @@ const DiaryWritePage = ({ type }: { type: string }) => {
     if (type === 'view' || type === 'edit') {
       async function getDiary(date: string) {
         const response = await GetDiary(date);
-        const diaryInfo = response!.diaryInfo;
+        const diaryInfo = response.data.diaryInfo;
 
         if (response) {
           setFormData({
@@ -83,7 +83,7 @@ const DiaryWritePage = ({ type }: { type: string }) => {
       })
     );
 
-    /* 다이어리 작성 API 테스트 코드 */
+    /* 다이어리 작성 */
     if (type === 'write') {
       const response = await Create(formDataRequest, params.date!);
 
@@ -91,20 +91,19 @@ const DiaryWritePage = ({ type }: { type: string }) => {
         navigate(`/view/${params.date!}`);
         return;
       } else {
-        alert('일기 작성에 실패했습니다.');
+        alert(`${response}`);
         return;
       }
     }
 
-    /* 다이어리 수정 API 테스트 코드 */
+    /* 다이어리 수정 */
     if (type === 'edit') {
       const response = await Update(formDataRequest, params.date as string);
 
       if (response && response.status === 200) {
         navigate(`/view/${params.date}`);
       } else {
-        alert('일기 수정에 실패했습니다.');
-        return;
+        alert(`${response}`);
       }
     }
   };
@@ -155,15 +154,16 @@ const DiaryWritePage = ({ type }: { type: string }) => {
     });
   };
 
+  /* 다이어리 삭제 */
   const handleDeleteButtonClick = async () => {
     if (window.confirm('일기를 정말로 삭제하시겠습니까?')) {
-      const data = await Delete(params.date as string);
+      const response = await Delete(params.date as string);
 
-      if (data && data.status === 200) {
+      if (response && response.status === 200) {
         alert('일기가 삭제되었습니다.');
         navigate('/');
       } else {
-        alert('일기 삭제에 실패했습니다.');
+        alert(`${response}`);
       }
     }
   };
