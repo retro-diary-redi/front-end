@@ -233,7 +233,6 @@ const StyledCalendar = styled(ReactCalendar)`
 
   // 현재 날짜 타일 스타일
   .react-calendar__tile--now {
-    background: none;
     abbr {
       text-decoration: underline;
     }
