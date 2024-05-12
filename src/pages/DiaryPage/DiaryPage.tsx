@@ -186,6 +186,10 @@ const DiaryWritePage = ({ type }: { type: string }) => {
     navigate(`/edit/${params.date}`);
   };
 
+  const handleImageClick = () => {
+    window.open(formData.image_url);
+  };
+
   return (
     <Container onClick={handleModalExternalClick}>
       <Link to="/">
@@ -289,6 +293,7 @@ const DiaryWritePage = ({ type }: { type: string }) => {
             <SelectedImage
               src={formData.image_url}
               alt="preview"
+              onClick={handleImageClick}
             ></SelectedImage>
           )}
           <textarea
