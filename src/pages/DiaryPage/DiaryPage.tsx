@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import SelectButton from './SelectButton';
 import SelectModal from './SelectModal';
 import { DiaryFormProps } from '@/models/DiaryData';
-import { Create, Delete, GetDiary, Update } from '@/services/diary';
+import { Create, Delete, GetDiary, GetImage, Update } from '@/services/diary';
 
 const DiaryWritePage = ({ type }: { type: string }) => {
   const navigate = useNavigate();
@@ -42,14 +42,21 @@ const DiaryWritePage = ({ type }: { type: string }) => {
             date: params.date!,
             mood: diaryInfo.mood,
             weather: diaryInfo.weather,
-            image_url: diaryInfo.savedFilenames[0],
+            image_url: `http://localhost:8080${diaryInfo.savedFilePaths[0]}`,
           });
+        }
+
+        const image = await GetImage(
+          `http://localhost:8080${diaryInfo.savedFilePaths[0]}`
+        );
+        if (image) {
+          setImageFile(image);
         }
       }
 
       getDiary(params.date as string);
     }
-  }, []);
+  }, [type]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -76,15 +83,15 @@ const DiaryWritePage = ({ type }: { type: string }) => {
       weather: formData.weather,
     };
 
-    formDataRequest.append(
-      'diaryWriteRequestDTO',
-      new Blob([JSON.stringify(diaryWriteRequestDTO)], {
-        type: 'application/json',
-      })
-    );
-
     /* 다이어리 작성 */
     if (type === 'write') {
+      formDataRequest.append(
+        'diaryWriteRequestDTO',
+        new Blob([JSON.stringify(diaryWriteRequestDTO)], {
+          type: 'application/json',
+        })
+      );
+
       const response = await Create(formDataRequest, params.date!);
 
       if (response && response.status === 201) {
@@ -98,6 +105,13 @@ const DiaryWritePage = ({ type }: { type: string }) => {
 
     /* 다이어리 수정 */
     if (type === 'edit') {
+      formDataRequest.append(
+        'diaryUpdateRequestDTO',
+        new Blob([JSON.stringify(diaryWriteRequestDTO)], {
+          type: 'application/json',
+        })
+      );
+
       const response = await Update(formDataRequest, params.date as string);
 
       if (response && response.status === 200) {
