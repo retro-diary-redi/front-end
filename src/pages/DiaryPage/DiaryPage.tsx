@@ -49,6 +49,7 @@ const DiaryWritePage = ({ type }: { type: string }) => {
         const image = await GetImage(
           `http://localhost:8080${diaryInfo.savedFilePaths[0]}`
         );
+
         if (image) {
           setImageFile(image);
         }
