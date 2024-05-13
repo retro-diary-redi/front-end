@@ -101,7 +101,7 @@ const LoginPage = ({
         >
           <i className="xi-2x xi-google"></i>{' '}
         </button>
-        <a href="http://localhost:8080/oauth2/authorization/naver&redirect_uri=http://localhost:3000/login/oauth/callback">
+        <a href="http://localhost:8080/oauth2/authorization/naver?redirect_uri=http://localhost:3000/login/oauth/callback">
           <button
             className="btn-social-login"
             style={{ backgroundColor: '#1FC700' }}
@@ -110,7 +110,7 @@ const LoginPage = ({
             <i className="xi-2x xi-naver"></i>
           </button>
         </a>
-        <a href="http://localhost:8080/oauth2/authorization/kakao&redirect_uri=http://localhost:3000/login/oauth/callback">
+        <a href="http://localhost:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/login/oauth/callback">
           <button
             className="btn-social-login"
             style={{ backgroundColor: '#FFEB00' }}
