@@ -3,7 +3,7 @@ import Button from '@/components/Button';
 import { Form } from '@/components/Form';
 import { LoginRequest } from '@/models/LoginData';
 import { KAKAO_AUTH_URL, NAVER_AUTH_URL } from '@/services/Oauth';
-import Login from '@/services/login';
+import Login, { OAuth2Login } from '@/services/login';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -51,6 +51,18 @@ const LoginPage = ({
     }
   };
 
+  const handleOAuth2Login = async (platform: string) => {
+    const response = await OAuth2Login(platform);
+
+    if (response && response.status === 200) {
+      alert('로그인 되었습니다.');
+      setIsLoggedIn(true);
+      navigate('/');
+    } else {
+      alert(`${response}`);
+    }
+  };
+
   return (
     <Container width={400} height={400}>
       <h1>Login</h1>
@@ -85,27 +97,27 @@ const LoginPage = ({
         <button
           className="btn-social-login"
           style={{ backgroundColor: '#D93025' }}
+          onClick={() => handleOAuth2Login('google')}
         >
-          <a href="#">
-            <i className="xi-2x xi-google"></i>{' '}
-          </a>
+          <i className="xi-2x xi-google"></i>{' '}
         </button>
-        <button
-          className="btn-social-login"
-          style={{ backgroundColor: '#1FC700' }}
-        >
-          <a href={NAVER_AUTH_URL}>
+        <a href="http://localhost:8080/oauth2/authorization/naver&redirect_uri=http://localhost:3000/login/oauth/callback">
+          <button
+            className="btn-social-login"
+            style={{ backgroundColor: '#1FC700' }}
+            onClick={() => handleOAuth2Login('naver')}
+          >
             <i className="xi-2x xi-naver"></i>
-          </a>
-        </button>
-        <button
-          className="btn-social-login"
-          style={{ backgroundColor: '#FFEB00' }}
-        >
-          <a href={KAKAO_AUTH_URL}>
+          </button>
+        </a>
+        <a href="http://localhost:8080/oauth2/authorization/kakao&redirect_uri=http://localhost:3000/login/oauth/callback">
+          <button
+            className="btn-social-login"
+            style={{ backgroundColor: '#FFEB00' }}
+          >
             <i className="xi-2x xi-kakaotalk text-dark"></i>
-          </a>
-        </button>
+          </button>
+        </a>
       </div>
     </Container>
   );

@@ -15,27 +15,27 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // useEffect(() => {
-  //   // 현재 유저가 로그인 중인지 확인
-  //   async function getStatus() {
-  //     const status = await Auth();
+  useEffect(() => {
+    // 현재 유저가 로그인 중인지 확인
+    async function getStatus() {
+      const status = await Auth();
 
-  //     if (status === 200) {
-  //       setIsLoggedIn(true);
-  //       navigate('/');
-  //       setIsLoading(false);
-  //     } else {
-  //       navigate('/landing');
-  //       setIsLoading(false);
-  //     }
-  //   }
+      if (status === 200) {
+        setIsLoggedIn(true);
+        navigate('/');
+        setIsLoading(false);
+      } else {
+        // navigate('/landing');
+        setIsLoading(false);
+      }
+    }
 
-  //   getStatus();
-  // }, []);
+    getStatus();
+  }, []);
 
   return (
     <>
-      {!isLoading ? (
+      {isLoading ? (
         <div>Loading...</div>
       ) : (
         <>
@@ -45,7 +45,7 @@ const App = () => {
               <Route path="/" element={<MainPage isLoggedIn={isLoggedIn} />} />
               <Route path="landing" element={<LandingPage />} />
               <Route
-                path="/login/oauth/callback/:platform"
+                path="/login/oauth/callback"
                 element={<LoginHandlerPage />}
               />
               <Route path="/signup" element={<SignUpPage />} />

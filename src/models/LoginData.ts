@@ -4,8 +4,6 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  // status: 기존에 구현된 소셜 로그인 때문에 추가해둔 값으로, 추후 소셜 로그인 로직 수정 시 수정해야 함
-  status?: string;
   userInfo: {
     username: string;
   };

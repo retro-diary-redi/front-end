@@ -14,6 +14,17 @@ export default async function Login(
   }
 }
 
+export async function OAuth2Login(
+  platform: string
+): Promise<AxiosResponse<LoginResponse>> {
+  try {
+    const response = await API.get(`/oauth2/authorization/${platform}`);
+    return response;
+  } catch (err: any) {
+    return err;
+  }
+}
+
 export async function Auth(): Promise<number | boolean> {
   try {
     const data: number = await API.get('/auth/status').then(
