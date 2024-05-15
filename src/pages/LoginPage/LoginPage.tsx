@@ -1,13 +1,15 @@
 import BoxContainer from '@/components/BoxContainer';
 import Button from '@/components/Button';
 import { Form } from '@/components/Form';
-import { LoginRequest } from '@/models/LoginData';
+import useModal from '@/hooks/useModal';
+import { LoginRequest, LoginResponse } from '@/models/LoginData';
 import { KAKAO_AUTH_URL, NAVER_AUTH_URL } from '@/services/Oauth';
 import Login, { OAuth2Login } from '@/services/login';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { AxiosResponse } from 'axios';
 
 const LoginPage = ({
   setIsLoggedIn,
@@ -20,6 +22,20 @@ const LoginPage = ({
     id: '',
     password: '',
   });
+
+  const {
+    Modal: LoginSuccessModal,
+    open: openLoginSuccessModal,
+    close: closeLoginSuccessModal,
+    isOpen: isLoginSuccessModalOpen,
+  } = useModal();
+
+  const {
+    Modal: LoginFailureModal,
+    open: openLoginFailureModal,
+    close: closeLoginFailureModal,
+    isOpen: isLoginFailureModalOpen,
+  } = useModal();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -36,14 +52,14 @@ const LoginPage = ({
       password: formData.password,
     };
 
-    const response = await Login(request);
+    const response: AxiosResponse<LoginResponse> | string =
+      await Login(request);
 
-    if (response && response.status === 200) {
-      alert('로그인 되었습니다.');
+    if (typeof response !== 'string' && response.status === 200) {
+      openLoginSuccessModal('로그인 되었습니다.');
       setIsLoggedIn(true);
-      navigate('/');
-    } else {
-      alert(`${response}`);
+    } else if (typeof response === 'string') {
+      openLoginFailureModal(response);
       setFormData({
         id: '',
         password: '',
@@ -52,14 +68,14 @@ const LoginPage = ({
   };
 
   const handleOAuth2Login = async (platform: string) => {
-    const response = await OAuth2Login(platform);
+    const response: AxiosResponse<LoginResponse> | string =
+      await OAuth2Login(platform);
 
-    if (response && response.status === 200) {
-      alert('로그인 되었습니다.');
+    if (typeof response !== 'string' && response.status === 200) {
+      openLoginSuccessModal('로그인 되었습니다.');
       setIsLoggedIn(true);
-      navigate('/');
-    } else {
-      alert(`${response}`);
+    } else if (typeof response === 'string') {
+      openLoginFailureModal(response);
     }
   };
 
@@ -119,6 +135,37 @@ const LoginPage = ({
           </button>
         </a>
       </div>
+
+      {isLoginSuccessModalOpen && (
+        <LoginSuccessModal>
+          <Button
+            type="button"
+            color={'var(--secondary)'}
+            fontSize={12}
+            onClick={() => {
+              closeLoginSuccessModal();
+              navigate('/');
+            }}
+          >
+            확인
+          </Button>
+        </LoginSuccessModal>
+      )}
+
+      {isLoginFailureModalOpen && (
+        <LoginFailureModal>
+          <Button
+            type="button"
+            color={'var(--secondary)'}
+            fontSize={12}
+            onClick={() => {
+              closeLoginFailureModal();
+            }}
+          >
+            확인
+          </Button>
+        </LoginFailureModal>
+      )}
     </Container>
   );
 };

@@ -1,8 +1,11 @@
 import BoxContainer from '@/components/BoxContainer';
 import Button from '@/components/Button';
 import { Form } from '@/components/Form';
+import useModal from '@/hooks/useModal';
+import { LoginResponse } from '@/models/LoginData';
 import { RegisterRequest } from '@/models/RegisterData';
 import Register from '@/services/register';
+import { AxiosResponse } from 'axios';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -19,6 +22,27 @@ function SignUpPage() {
     confirmPassword: '',
   });
 
+  const {
+    Modal: SignUpSuccessModal,
+    open: openSignUpSuccessModal,
+    close: closeSignUpSuccessModal,
+    isOpen: isOpenSignUpSuccessModal,
+  } = useModal();
+
+  const {
+    Modal: SignUpFailureModal,
+    open: openSignUpFailureModal,
+    close: closeSignUpFailureModal,
+    isOpen: isOpenSignUpFailureModal,
+  } = useModal();
+
+  const {
+    Modal: ValidationErrorModal,
+    open: openValidationErrorModal,
+    close: closeValidationErrorModal,
+    isOpen: isOpenValidationErrorModal,
+  } = useModal();
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -32,7 +56,7 @@ function SignUpPage() {
     // 닉네임 유효성 검사
     const nicknamePattern = /^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,16}$/;
     if (!nicknamePattern.test(formData.nickname)) {
-      alert(
+      openValidationErrorModal(
         '닉네임은 2자 이상 16자 이하, 영어와 숫자 또는 한글로 구성되어야 합니다.'
       );
       setFormData({ ...formData, nickname: '' });
@@ -41,7 +65,9 @@ function SignUpPage() {
 
     // 비밀번호 입력이 다를 경우
     if (formData.password !== formData.confirmPassword) {
-      alert('비밀번호가 일치하지 않습니다. 다시 입력해주세요.');
+      openValidationErrorModal(
+        '비밀번호가 일치하지 않습니다. 다시 입력해주세요.'
+      );
       setFormData({ ...formData, password: '', confirmPassword: '' });
       return;
     }
@@ -50,7 +76,7 @@ function SignUpPage() {
     const pwPattern =
       /^(?=.*[0-9])(?=.*[a-zA-Z])[a-zA-Z0-9!@#$%^&*()._-]{6,16}$/;
     if (!pwPattern.test(formData.password)) {
-      alert(
+      openValidationErrorModal(
         '비밀번호는 6자 이상 16자 이하, 영어와 숫자의 조합으로 구성되어야 합니다.'
       );
       setFormData({ ...formData, password: '', confirmPassword: '' });
@@ -64,17 +90,13 @@ function SignUpPage() {
       email: formData.email,
     };
 
-    const response = await Register(request);
+    const response: AxiosResponse<LoginResponse> | string =
+      await Register(request);
 
-    if (response && response.status === 201) {
-      alert('회원가입이 완료되었습니다. 로그인해주세요.');
-      navigate('/login');
-    } else {
-      alert(`${response}`);
-      setFormData({
-        ...formData,
-        email: '',
-      });
+    if (typeof response !== 'string' && response.status === 201) {
+      openSignUpSuccessModal('회원가입이 완료되었습니다.\n로그인해주세요.');
+    } else if (typeof response === 'string') {
+      openSignUpFailureModal(response);
     }
   };
 
@@ -131,6 +153,53 @@ function SignUpPage() {
           Sign Up
         </Button>
       </Form>
+      {isOpenSignUpSuccessModal && (
+        <SignUpSuccessModal>
+          <Button
+            type="button"
+            color={'var(--secondary)'}
+            fontSize={12}
+            onClick={() => {
+              closeSignUpSuccessModal();
+              navigate('/login');
+            }}
+          >
+            확인
+          </Button>
+        </SignUpSuccessModal>
+      )}
+      {isOpenSignUpFailureModal && (
+        <SignUpFailureModal>
+          <Button
+            type="button"
+            color={'var(--secondary)'}
+            fontSize={12}
+            onClick={() => {
+              closeSignUpFailureModal();
+              setFormData({
+                ...formData,
+                email: '',
+              });
+            }}
+          >
+            확인
+          </Button>
+        </SignUpFailureModal>
+      )}
+      {isOpenValidationErrorModal && (
+        <ValidationErrorModal>
+          <Button
+            type="button"
+            color={'var(--secondary)'}
+            fontSize={12}
+            onClick={() => {
+              closeValidationErrorModal();
+            }}
+          >
+            확인
+          </Button>
+        </ValidationErrorModal>
+      )}
     </Container>
   );
 }

@@ -4,7 +4,7 @@ import { LoginRequest, LoginResponse } from '@/models/LoginData';
 
 export default async function Login(
   request: LoginRequest
-): Promise<AxiosResponse<LoginResponse>> {
+): Promise<AxiosResponse<LoginResponse> | string> {
   try {
     const data = await API.post('/auth/loginProc', request);
     return data;
@@ -16,7 +16,7 @@ export default async function Login(
 
 export async function OAuth2Login(
   platform: string
-): Promise<AxiosResponse<LoginResponse>> {
+): Promise<AxiosResponse<LoginResponse> | string> {
   try {
     const response = await API.get(`/oauth2/authorization/${platform}`);
     return response;

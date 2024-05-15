@@ -1,4 +1,6 @@
 import BoxContainer from '@/components/BoxContainer';
+import Button from '@/components/Button';
+import useModal from '@/hooks/useModal';
 import { Diaries } from '@/models/DiaryData';
 import moment from 'moment';
 import { ReactElement, useCallback, useState } from 'react';
@@ -18,24 +20,35 @@ const Calendar = ({
 }) => {
   const navigate = useNavigate();
   const [value, handleChange] = useState<Value>(new Date());
+  const [clickedDay, setClickedDay] = useState<string>();
+
+  const {
+    Modal: AlertModal,
+    open: openAlertModal,
+    close: closeAlertModal,
+    isOpen: isAlertModalOpen,
+  } = useModal();
+
+  const {
+    Modal: ConfirmModal,
+    open: openConfirmModal,
+    close: closeConfirmModal,
+    isOpen: isConfirmModalOpen,
+  } = useModal();
 
   const handleDayClick = (value: any, _: any) => {
-    const clickedDay = moment(new Date(value));
-    const stringDate = clickedDay.format('YYYY-MM-DD');
+    const clickedDay = moment(new Date(value)).format('YYYY-MM-DD');
+    setClickedDay(clickedDay);
 
-    if (diaries?.diaryDateList.includes(stringDate)) {
-      navigate(`/view/${stringDate}`);
+    if (diaries?.diaryDateList.includes(clickedDay)) {
+      navigate(`/view/${clickedDay}`);
     } else {
       if (moment().isBefore(clickedDay)) {
-        alert('미래의 일기는 작성할 수 없습니다.');
-        return;
-      }
-      if (
-        confirm(
+        openAlertModal('미래의 일기는 작성할 수 없습니다.');
+      } else {
+        openConfirmModal(
           '해당 날짜에 작성된 일기가 없습니다. 새로 일기를 작성하시겠습니까?'
-        )
-      ) {
-        navigate(`/write/${stringDate}`);
+        );
       }
     }
   };
@@ -80,6 +93,47 @@ const Calendar = ({
         />
         {children}
       </RelativeBoxContainer>
+      {isAlertModalOpen && (
+        <AlertModal>
+          <Button
+            type="button"
+            color={'var(--secondary)'}
+            fontSize={12}
+            onClick={closeAlertModal}
+          >
+            확인
+          </Button>
+        </AlertModal>
+      )}
+      {isConfirmModalOpen && (
+        <ConfirmModal>
+          <div className="buttons">
+            <Button
+              type="button"
+              color={'var(--primary)'}
+              fontSize={12}
+              onClick={closeConfirmModal}
+              width={66}
+              height={31}
+            >
+              아니오
+            </Button>
+            <Button
+              type="button"
+              color={'var(--secondary)'}
+              fontSize={12}
+              onClick={() => {
+                closeConfirmModal();
+                navigate(`/write/${clickedDay}`);
+              }}
+              width={66}
+              height={31}
+            >
+              예
+            </Button>
+          </div>
+        </ConfirmModal>
+      )}
     </>
   );
 };
