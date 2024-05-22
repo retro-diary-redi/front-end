@@ -6,6 +6,7 @@ import SelectButton from './SelectButton';
 import SelectModal from './SelectModal';
 import { DiaryFormProps } from '@/models/DiaryData';
 import { Create, Delete, GetDiary, GetImage, Update } from '@/services/diary';
+import useModal from '@/hooks/useModal';
 
 const DiaryWritePage = ({ type }: { type: string }) => {
   const navigate = useNavigate();
@@ -16,8 +17,22 @@ const DiaryWritePage = ({ type }: { type: string }) => {
   const [showMoodSelectModal, setShowMoodSelectModal] = useState(false);
   const [showWeatherSelectModal, setShowWeatherSelectModal] = useState(false);
 
+  const {
+    Modal: AlertModal,
+    open: openAlertModal,
+    close: closeAlertModal,
+    isOpen: isAlertModalOpen,
+  } = useModal();
+
+  const {
+    Modal: ConfirmModal,
+    open: openConfirmModal,
+    close: closeConfirmModal,
+    isOpen: isConfirmModalOpen,
+  } = useModal();
+
   // 이미지 파일
-  const [imageFile, setImageFile] = useState<File>();
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   const [formData, setFormData] = useState<DiaryFormProps>({
     title: '',
@@ -25,7 +40,7 @@ const DiaryWritePage = ({ type }: { type: string }) => {
     date: params.date!,
     mood: 0,
     weather: 0,
-    image_url: '',
+    image_url: null,
   });
 
   // 첫 렌더링 시 조회인지 확인하고 데이터 넣어서 보여주기
@@ -42,16 +57,21 @@ const DiaryWritePage = ({ type }: { type: string }) => {
             date: params.date!,
             mood: diaryInfo.mood,
             weather: diaryInfo.weather,
-            image_url: `http://localhost:8080${diaryInfo.savedFilePaths[0]}`,
+            image_url:
+              diaryInfo.savedFilePaths.length > 0
+                ? `http://localhost:8080${diaryInfo.savedFilePaths[0]}`
+                : null,
           });
         }
 
-        const image = await GetImage(
-          `http://localhost:8080${diaryInfo.savedFilePaths[0]}`
-        );
+        if (diaryInfo.savedFilePaths.length > 0) {
+          const image = await GetImage(
+            `http://localhost:8080${diaryInfo.savedFilePaths[0]}`
+          );
 
-        if (image) {
-          setImageFile(image);
+          if (image) {
+            setImageFile(image);
+          }
         }
       }
 
@@ -75,7 +95,9 @@ const DiaryWritePage = ({ type }: { type: string }) => {
     const formDataRequest = new FormData();
 
     // 이미지가 있다면 이미지 추가
-    if (imageFile !== undefined) formDataRequest.append('images', imageFile);
+    if (imageFile) {
+      formDataRequest.append('images', imageFile!);
+    }
 
     const diaryWriteRequestDTO = {
       title: formData.title,
@@ -99,7 +121,7 @@ const DiaryWritePage = ({ type }: { type: string }) => {
         navigate(`/view/${params.date!}`);
         return;
       } else {
-        alert(`${response}`);
+        openAlertModal(`${response}`);
         return;
       }
     }
@@ -118,7 +140,7 @@ const DiaryWritePage = ({ type }: { type: string }) => {
       if (response && response.status === 200) {
         navigate(`/view/${params.date}`);
       } else {
-        alert(`${response}`);
+        openAlertModal(`${response}`);
       }
     }
   };
@@ -167,20 +189,12 @@ const DiaryWritePage = ({ type }: { type: string }) => {
       ...formData,
       image_url: '',
     });
+    setImageFile(null);
   };
 
   /* 다이어리 삭제 */
   const handleDeleteButtonClick = async () => {
-    if (window.confirm('일기를 정말로 삭제하시겠습니까?')) {
-      const response = await Delete(params.date as string);
-
-      if (response && response.status === 200) {
-        alert('일기가 삭제되었습니다.');
-        navigate('/');
-      } else {
-        alert(`${response}`);
-      }
-    }
+    openConfirmModal('일기를 정말로 삭제하시겠습니까?');
   };
 
   const handleEditButtonClick = () => {
@@ -188,128 +202,179 @@ const DiaryWritePage = ({ type }: { type: string }) => {
   };
 
   const handleImageClick = () => {
-    window.open(formData.image_url);
+    window.open(formData.image_url!);
   };
 
   return (
-    <Container onClick={handleModalExternalClick}>
-      <Link to="/">
-        <button type="button">{'<'} back</button>
-      </Link>
-      <p>{params.date}</p>
-      <form onSubmit={handleSubmit}>
-        {(type === 'write' || type === 'edit') && (
-          <Button type="submit" color={`var(--secondary)`} fontSize={12}>
-            저장
+    <>
+      <Container onClick={handleModalExternalClick}>
+        <Link to="/">
+          <button type="button">{'<'} back</button>
+        </Link>
+        <p>{params.date}</p>
+        <form onSubmit={handleSubmit}>
+          {(type === 'write' || type === 'edit') && (
+            <Button type="submit" color={`var(--secondary)`} fontSize={12}>
+              저장
+            </Button>
+          )}
+          {type === 'view' && (
+            <div className="view-buttons">
+              <Button
+                type="button"
+                className="view-edit-button"
+                fontSize={12}
+                onClick={handleEditButtonClick}
+              >
+                수정
+              </Button>
+              <Button
+                type="button"
+                className="view-delete-button"
+                color={`var(--secondary)`}
+                fontSize={12}
+                onClick={handleDeleteButtonClick}
+              >
+                삭제
+              </Button>
+            </div>
+          )}
+
+          <div className="title-div">
+            <StyledInput
+              type="text"
+              name="title"
+              value={formData.title}
+              required
+              onChange={handleChange}
+              disabled={type === 'view'}
+              placeholder="Please enter a title"
+            ></StyledInput>
+            <SelectButton
+              status={type}
+              type="mood"
+              index={formData.mood}
+              onClick={onClickMoodSelectButton}
+            />
+            {showMoodSelectModal && (
+              <SelectModal
+                type="mood"
+                setShowSelectModal={setShowMoodSelectModal}
+                formData={formData}
+                setFormData={setFormData}
+              />
+            )}
+            <SelectButton
+              status={type}
+              type="weather"
+              index={formData.weather}
+              onClick={onClickWeatherSelectButton}
+            />
+            {showWeatherSelectModal && (
+              <SelectModal
+                type="weather"
+                setShowSelectModal={setShowWeatherSelectModal}
+                formData={formData}
+                setFormData={setFormData}
+              />
+            )}
+          </div>
+          {formData.image_url && (type === 'write' || type === 'edit') && (
+            <Button
+              fontSize={12}
+              type="button"
+              onClick={handleRemoveImageButtonClick}
+            >
+              {type === 'write' ? '오늘의 사진 삭제하기' : '사진 삭제하기'}
+            </Button>
+          )}
+          {formData.image_url === null &&
+            (type === 'write' || type === 'edit') && (
+              <Button
+                fontSize={12}
+                type="button"
+                onClick={handleAddImageButtonClick}
+              >
+                {type === 'write' ? '오늘의 사진 추가하기' : '사진 추가하기'}
+              </Button>
+            )}
+          <input
+            type="file"
+            accept="image/*"
+            ref={fileInput}
+            onChange={handleImageChange}
+            style={{ display: 'none' }}
+          />
+          <div className="write-form-section">
+            {formData.image_url && (
+              <SelectedImage
+                src={formData.image_url}
+                alt="preview"
+                onClick={handleImageClick}
+              ></SelectedImage>
+            )}
+            <textarea
+              name="content"
+              id="content"
+              autoFocus={false}
+              value={formData.content}
+              required
+              onChange={handleChange}
+              disabled={type === 'view'}
+              placeholder="Please enter a content..."
+            ></textarea>
+          </div>
+        </form>
+      </Container>{' '}
+      {isAlertModalOpen && (
+        <AlertModal>
+          <Button
+            type="button"
+            color={'var(--secondary)'}
+            fontSize={12}
+            onClick={closeAlertModal}
+          >
+            확인
           </Button>
-        )}
-        {type === 'view' && (
-          <div className="view-buttons">
+        </AlertModal>
+      )}
+      {isConfirmModalOpen && (
+        <ConfirmModal>
+          <div className="buttons">
             <Button
               type="button"
-              className="view-edit-button"
+              color={'var(--primary)'}
               fontSize={12}
-              onClick={handleEditButtonClick}
+              onClick={closeConfirmModal}
+              width={66}
+              height={31}
             >
-              수정
+              아니오
             </Button>
             <Button
               type="button"
-              className="view-delete-button"
-              color={`var(--secondary)`}
+              color={'var(--secondary)'}
               fontSize={12}
-              onClick={handleDeleteButtonClick}
+              onClick={async () => {
+                const response = await Delete(params.date as string);
+
+                if (response && response.status === 200) {
+                  openAlertModal('일기가 삭제되었습니다.');
+                  navigate('/');
+                } else {
+                  openAlertModal(`${response}`);
+                }
+                closeConfirmModal();
+              }}
+              width={66}
+              height={31}
             >
-              삭제
+              예
             </Button>
           </div>
-        )}
-
-        <div className="title-div">
-          <StyledInput
-            type="text"
-            name="title"
-            value={formData.title}
-            required
-            onChange={handleChange}
-            disabled={type === 'view'}
-            placeholder="Please enter a title"
-          ></StyledInput>
-          <SelectButton
-            status={type}
-            type="mood"
-            index={formData.mood}
-            onClick={onClickMoodSelectButton}
-          />
-          {showMoodSelectModal && (
-            <SelectModal
-              type="mood"
-              setShowSelectModal={setShowMoodSelectModal}
-              formData={formData}
-              setFormData={setFormData}
-            />
-          )}
-          <SelectButton
-            status={type}
-            type="weather"
-            index={formData.weather}
-            onClick={onClickWeatherSelectButton}
-          />
-          {showWeatherSelectModal && (
-            <SelectModal
-              type="weather"
-              setShowSelectModal={setShowWeatherSelectModal}
-              formData={formData}
-              setFormData={setFormData}
-            />
-          )}
-        </div>
-        {formData.image_url && (type === 'write' || type === 'edit') && (
-          <Button
-            fontSize={12}
-            type="button"
-            onClick={handleRemoveImageButtonClick}
-          >
-            {type === 'write' ? '오늘의 사진 삭제하기' : '사진 삭제하기'}
-          </Button>
-        )}
-        {formData.image_url === '' && (type === 'write' || type === 'edit') && (
-          <Button
-            fontSize={12}
-            type="button"
-            onClick={handleAddImageButtonClick}
-          >
-            {type === 'write' ? '오늘의 사진 추가하기' : '사진 추가하기'}
-          </Button>
-        )}
-        <input
-          type="file"
-          accept="image/*"
-          ref={fileInput}
-          onChange={handleImageChange}
-          style={{ display: 'none' }}
-        />
-        <div className="write-form-section">
-          {formData.image_url && (
-            <SelectedImage
-              src={formData.image_url}
-              alt="preview"
-              onClick={handleImageClick}
-            ></SelectedImage>
-          )}
-          <textarea
-            name="content"
-            id="content"
-            autoFocus={false}
-            value={formData.content}
-            required
-            onChange={handleChange}
-            disabled={type === 'view'}
-            placeholder="Please enter a content..."
-          ></textarea>
-        </div>
-      </form>
-    </Container>
+        </ConfirmModal>
+      )}
+    </>
   );
 };
 

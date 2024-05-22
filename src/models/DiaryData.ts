@@ -5,7 +5,7 @@ export interface DiaryFormProps {
   date: string;
   mood: number;
   weather: number;
-  image_url: string;
+  image_url: string | null;
 }
 
 export interface Diaries {
