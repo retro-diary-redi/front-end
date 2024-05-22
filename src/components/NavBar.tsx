@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
 import API from '@/services/API';
-import { Dispatch, SetStateAction } from 'react';
 import useModal from '@/hooks/useModal';
 import Button from './Button';
+import { useAppDispatch, useAppSelector } from '@/store';
+import { logout } from '@/store/authSlice';
 
 const Wrapper = styled.div`
   border-bottom: 1px solid black;
@@ -24,13 +25,10 @@ const Wrapper = styled.div`
   }
 `;
 
-function NavBar({
-  isLoggedIn,
-  setIsLoggedIn,
-}: {
-  isLoggedIn: boolean;
-  setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
-}) {
+function NavBar() {
+  const auth = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
+
   const navigate = useNavigate();
   const {
     Modal: ConfirmModal,
@@ -47,7 +45,7 @@ function NavBar({
     API.post('/auth/logout')
       .then(() => {
         closeConfirmModal();
-        setIsLoggedIn(false);
+        dispatch(logout());
         navigate('/landing');
       })
       .catch((err) => {
@@ -59,7 +57,7 @@ function NavBar({
     <>
       <Wrapper>
         <Link to="/">Home</Link>
-        {isLoggedIn ? (
+        {auth.isLoggedIn ? (
           <>
             <p className="right">
               <Link to="/">Profile</Link>

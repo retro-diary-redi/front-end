@@ -3,19 +3,18 @@ import Button from '@/components/Button';
 import { Form } from '@/components/Form';
 import useModal from '@/hooks/useModal';
 import { LoginRequest, LoginResponse } from '@/models/LoginData';
-import { KAKAO_AUTH_URL, NAVER_AUTH_URL } from '@/services/Oauth';
-import Login, { OAuth2Login } from '@/services/login';
-import { Dispatch, SetStateAction, useState } from 'react';
+import Login from '@/services/login';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { AxiosResponse } from 'axios';
+import { useAppDispatch } from '@/store';
+import { login } from '@/store/authSlice';
 
-const LoginPage = ({
-  setIsLoggedIn,
-}: {
-  setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
-}) => {
+const LoginPage = () => {
+  const dispatch = useAppDispatch();
+
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -57,25 +56,13 @@ const LoginPage = ({
 
     if (typeof response !== 'string' && response.status === 200) {
       openLoginSuccessModal('로그인 되었습니다.');
-      setIsLoggedIn(true);
+      dispatch(login());
     } else if (typeof response === 'string') {
       openLoginFailureModal(response);
       setFormData({
         id: '',
         password: '',
       });
-    }
-  };
-
-  const handleOAuth2Login = async (platform: string) => {
-    const response: AxiosResponse<LoginResponse> | string =
-      await OAuth2Login(platform);
-
-    if (typeof response !== 'string' && response.status === 200) {
-      openLoginSuccessModal('로그인 되었습니다.');
-      setIsLoggedIn(true);
-    } else if (typeof response === 'string') {
-      openLoginFailureModal(response);
     }
   };
 
@@ -110,23 +97,23 @@ const LoginPage = ({
       </Form>
 
       <div className="social-login-buttons">
-        <button
-          className="btn-social-login"
-          style={{ backgroundColor: '#D93025' }}
-          onClick={() => handleOAuth2Login('google')}
-        >
-          <i className="xi-2x xi-google"></i>{' '}
-        </button>
-        <a href="http://localhost:8080/oauth2/authorization/naver?redirect_uri=http://localhost:3000/login/oauth/callback">
+        <a href="http://localhost:8080/oauth2/authorization/google">
+          <button
+            className="btn-social-login"
+            style={{ backgroundColor: '#D93025' }}
+          >
+            <i className="xi-2x xi-google"></i>{' '}
+          </button>
+        </a>
+        <a href="http://localhost:8080/oauth2/authorization/naver">
           <button
             className="btn-social-login"
             style={{ backgroundColor: '#1FC700' }}
-            onClick={() => handleOAuth2Login('naver')}
           >
             <i className="xi-2x xi-naver"></i>
           </button>
         </a>
-        <a href="http://localhost:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/login/oauth/callback">
+        <a href="http://localhost:8080/oauth2/authorization/kakao">
           <button
             className="btn-social-login"
             style={{ backgroundColor: '#FFEB00' }}

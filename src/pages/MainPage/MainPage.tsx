@@ -6,19 +6,21 @@ import { useEffect, useState } from 'react';
 import { GetDiaries } from '@/services/diary';
 import { Diaries } from '@/models/DiaryData';
 import moment from 'moment';
+import { useAppSelector } from '@/store';
 
-function MainPage({ isLoggedIn }: { isLoggedIn: boolean }) {
+function MainPage() {
   const navigate = useNavigate();
-
   const today = moment().format('YYYY-MM-DD');
   const [diaries, setDiaries] = useState<Diaries>();
 
+  const auth = useAppSelector((state) => state.auth);
+
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (!auth.isLoggedIn) {
       navigate('/landing');
       return;
     }
-  }, [isLoggedIn]);
+  }, [auth.isLoggedIn]);
 
   useEffect(() => {
     GetDiaries().then((data) => setDiaries(data!!));

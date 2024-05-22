@@ -1,34 +1,53 @@
-import API from '@/services/API';
+import Button from '@/components/Button';
+import useModal from '@/hooks/useModal';
+import { useAppDispatch } from '@/store';
+import { login } from '@/store/authSlice';
 import { useEffect } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const LoginHandlerPage = () => {
-  // const params = useParams();
-  // const [searchParams, _] = useSearchParams();
-  // const navigate = useNavigate();
+  const [searchParams, _] = useSearchParams();
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
-  // const code = searchParams.get('code');
-  // const platform = params.platform;
+  const result = searchParams.get('message');
 
-  // useEffect(() => {
-  //   const OauthLogin = async (platform: string, code: string) => {
-  //     await API.post(`/oauth2/authorization/${platform}`, {
-  //       code: code,
-  //     })
-  //       .then((res) => {
-  //         alert('로그인이 완료되었습니다.');
-  //         console.log(res);
-  //         navigate('/');
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //       });
-  //   };
+  const {
+    Modal: LoginFailureModal,
+    open: openLoginFailureModal,
+    close: closeLoginFailureModal,
+    isOpen: isLoginFailureModalOpen,
+  } = useModal();
 
-  //   if (platform && code) OauthLogin(platform, code);
-  // }, []);
+  useEffect(() => {
+    if (result === 'success') {
+      dispatch(login());
+      navigate('/');
+    } else if (result === 'failure') {
+      openLoginFailureModal('로그인에 실패하였습니다. 재시도해주세요.');
+    }
+  }, []);
 
-  return <div>로그인 중입니다. 잠시만 기다려주세요.</div>;
+  return (
+    <>
+      <div>로그인 중입니다. 잠시만 기다려주세요.</div>{' '}
+      {isLoginFailureModalOpen && (
+        <LoginFailureModal>
+          <Button
+            type="button"
+            color={'var(--secondary)'}
+            fontSize={12}
+            onClick={() => {
+              closeLoginFailureModal();
+              navigate('/login');
+            }}
+          >
+            확인
+          </Button>
+        </LoginFailureModal>
+      )}
+    </>
+  );
 };
 
 export default LoginHandlerPage;
