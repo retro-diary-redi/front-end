@@ -97,30 +97,30 @@ const LoginPage = () => {
       </Form>
 
       <div className="social-login-buttons">
-        <a href="http://localhost:8080/oauth2/authorization/google">
-          <button
-            className="btn-social-login"
-            style={{ backgroundColor: '#D93025' }}
-          >
-            <i className="xi-2x xi-google"></i>{' '}
-          </button>
-        </a>
-        <a href="http://localhost:8080/oauth2/authorization/naver">
-          <button
-            className="btn-social-login"
-            style={{ backgroundColor: '#1FC700' }}
-          >
+        <button
+          className="btn-social-login"
+          style={{ backgroundColor: '#D93025' }}
+        >
+          <a href="http://localhost:8080/oauth2/authorization/google">
+            <i className="xi-2x xi-google"></i>
+          </a>
+        </button>
+        <button
+          className="btn-social-login"
+          style={{ backgroundColor: '#1FC700' }}
+        >
+          <a href="http://localhost:8080/oauth2/authorization/naver">
             <i className="xi-2x xi-naver"></i>
-          </button>
-        </a>
-        <a href="http://localhost:8080/oauth2/authorization/kakao">
-          <button
-            className="btn-social-login"
-            style={{ backgroundColor: '#FFEB00' }}
-          >
+          </a>
+        </button>
+        <button
+          className="btn-social-login"
+          style={{ backgroundColor: '#FFEB00' }}
+        >
+          <a href="http://localhost:8080/oauth2/authorization/kakao">
             <i className="xi-2x xi-kakaotalk text-dark"></i>
-          </button>
-        </a>
+          </a>
+        </button>
       </div>
 
       {isLoginSuccessModalOpen && (

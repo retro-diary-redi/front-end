@@ -43,11 +43,12 @@ const GlobalStyle = createGlobalStyle`
 
   a {
     text-decoration: none;
+    color: inherit;
   }
 
   a:visited {
     text-decoration: none;
-    color: black;
+    color: inherit;
   }
 
   input {
