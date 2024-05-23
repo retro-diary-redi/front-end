@@ -28,7 +28,7 @@ export interface DiaryInfo {
     weather: number;
     content: string;
     nickname: string;
-    savedFilePaths: string[];
+    awsS3SavedFileURLs: string[];
   };
   message: string;
 }

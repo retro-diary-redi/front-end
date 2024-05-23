@@ -58,21 +58,21 @@ const DiaryWritePage = ({ type }: { type: string }) => {
             mood: diaryInfo.mood,
             weather: diaryInfo.weather,
             image_url:
-              diaryInfo.savedFilePaths.length > 0
-                ? `http://localhost:8080${diaryInfo.savedFilePaths[0]}`
+              diaryInfo.awsS3SavedFileURLs.length > 0
+                ? `${diaryInfo.awsS3SavedFileURLs[0]}`
                 : null,
           });
         }
 
-        if (diaryInfo.savedFilePaths.length > 0) {
-          const image = await GetImage(
-            `http://localhost:8080${diaryInfo.savedFilePaths[0]}`
-          );
+        // if (diaryInfo.awsS3SavedFileURLs.length > 0) {
+        //   const image = await GetImage(
+        //     `${diaryInfo.awsS3SavedFileURLs[0]}`
+        //   );
 
-          if (image) {
-            setImageFile(image);
-          }
-        }
+        //   if (image) {
+        //     setImageFile(image);
+        //   }
+        // }
       }
 
       getDiary(params.date as string);
