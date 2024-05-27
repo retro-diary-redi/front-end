@@ -7,6 +7,7 @@ import SelectModal from './SelectModal';
 import { DiaryFormProps } from '@/models/DiaryData';
 import { Create, Delete, GetDiary, GetImage, Update } from '@/services/diary';
 import useModal from '@/hooks/useModal';
+import FileResizer from 'react-image-file-resizer';
 
 const IMAGE_MAX_SIZE = 1 * 1024 * 1024;
 
@@ -151,9 +152,9 @@ const DiaryWritePage = ({ type }: { type: string }) => {
     }
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      const image = e.target.files[0];
+      const image = (await resizeFile(e.target.files[0])) as File;
 
       if (image.size > IMAGE_MAX_SIZE) {
         openAlertModal('이미지 용량이 너무 큽니다.');
@@ -169,6 +170,22 @@ const DiaryWritePage = ({ type }: { type: string }) => {
       }
     }
   };
+
+  const resizeFile = (file: File) =>
+    new Promise((resolve) => {
+      FileResizer.imageFileResizer(
+        file,
+        1500,
+        1500,
+        'JPEG',
+        80,
+        0,
+        (uri) => {
+          resolve(uri);
+        },
+        'file'
+      );
+    });
 
   const onClickMoodSelectButton = () => {
     setShowMoodSelectModal(true);
@@ -295,16 +312,13 @@ const DiaryWritePage = ({ type }: { type: string }) => {
           )}
           {formData.image_url === null &&
             (type === 'write' || type === 'edit') && (
-              <div className="image-add-button-section">
-                <Button
-                  fontSize={12}
-                  type="button"
-                  onClick={handleAddImageButtonClick}
-                >
-                  {type === 'write' ? '오늘의 사진 추가하기' : '사진 추가하기'}
-                </Button>
-                <p>1MB 이하의 이미지만 추가 가능합니다.</p>
-              </div>
+              <Button
+                fontSize={12}
+                type="button"
+                onClick={handleAddImageButtonClick}
+              >
+                {type === 'write' ? '오늘의 사진 추가하기' : '사진 추가하기'}
+              </Button>
             )}
           <input
             type="file"
@@ -460,17 +474,6 @@ const Container = styled.div`
 
   textarea:focus {
     outline: none;
-  }
-
-  .image-add-button-section {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-
-    p {
-      font-size: 13px;
-      color: #4a4a4a;
-    }
   }
 `;
 
